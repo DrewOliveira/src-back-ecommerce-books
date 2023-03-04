@@ -5,6 +5,8 @@ VisualStudioVersion = 17.3.32819.101
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LesBooks.API", "LesBooks.API\LesBooks.API.csproj", "{FDF05068-0044-44CE-B1DF-6C2C0442094E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LesBooks.Model", "LesBooks.Model\LesBooks.Model.csproj", "{ACBB03BA-E297-4397-9401-68054356B77D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{FDF05068-0044-44CE-B1DF-6C2C0442094E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FDF05068-0044-44CE-B1DF-6C2C0442094E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FDF05068-0044-44CE-B1DF-6C2C0442094E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ACBB03BA-E297-4397-9401-68054356B77D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACBB03BA-E297-4397-9401-68054356B77D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACBB03BA-E297-4397-9401-68054356B77D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACBB03BA-E297-4397-9401-68054356B77D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
