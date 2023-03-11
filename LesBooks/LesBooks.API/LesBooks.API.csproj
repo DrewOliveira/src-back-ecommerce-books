@@ -12,7 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
+    <ProjectReference Include="..\LesBooks.Application\LesBooks.Application.csproj" />
+    <ProjectReference Include="..\LesBooks.IoC\LesBooks.IoC.csproj" />
   </ItemGroup>
 
 </Project>

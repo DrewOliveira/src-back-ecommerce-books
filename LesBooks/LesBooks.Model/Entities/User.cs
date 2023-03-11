@@ -1,4 +1,6 @@
-﻿namespace LesBooks.Model.Entities
+﻿using LesBooks.Model.Enums;
+
+namespace LesBooks.Model.Entities
 {
     public class User
     {
