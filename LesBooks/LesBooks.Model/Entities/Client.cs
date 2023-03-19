@@ -16,7 +16,7 @@ namespace LesBooks.Model.Entities
         public User user{ get; set; }
         public Phone phone { get; set; }
         public Ranking ranking { get; set; }
-        public Card card { get; set; }
+        public List<Card> card { get; set; }
         public List<Adress> adresses { get; set; }
 
     }

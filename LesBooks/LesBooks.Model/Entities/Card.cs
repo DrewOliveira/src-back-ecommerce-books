@@ -7,7 +7,7 @@
         public string name { get; set; }
         public string securityCode { get; set; }
         public bool pricipal { get; set; }
-        public Method method { get; set; }
+        public Flag flag { get; set; }
 
     }
 }

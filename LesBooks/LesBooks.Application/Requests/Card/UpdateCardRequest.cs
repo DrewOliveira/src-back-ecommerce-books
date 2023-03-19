@@ -15,6 +15,6 @@ namespace LesBooks.Application.Requests
         [Required] public string name { get; set; }
         [Required] public string securityCode { get; set; }
         [Required] public bool pricipal { get; set; }
-        [Required] public Method method { get; set; }
+        [Required] public Flag flag { get; set; }
     }
 }

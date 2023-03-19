@@ -9,7 +9,10 @@ namespace LesBooks.Model.Entities
 {
     public class Adress
     {
+        public Adress()
+        {
 
+        }
         public Adress(int id, string street, string number, string zipCode, string obs, string identification, string neighborhood, string city, string state, string country, string typeAdress, string typeResidence, string typeStreet)
         {
             this.id = id;
