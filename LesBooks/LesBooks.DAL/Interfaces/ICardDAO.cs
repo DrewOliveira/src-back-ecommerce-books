@@ -9,10 +9,10 @@ namespace LesBooks.DAL
 {
     public interface ICardDAO
     {
-        public Card CreateCard(Card card);
+        public Card CreateCard(int id,Card card);
         public Card UpdateCard(Card card);
         public void DeleteCard(Card card);
-        public List<Card> GetAllCards();
+        public List<Card> GetAllCards(int id);
         public Card GetCardById(int id);
     }
 }

@@ -15,11 +15,12 @@ namespace LesBooks.Application.Requests
         [Required] public string gender { get; set; }
         [Required] public string cpf { get; set; }
         [Required] public User user { get; set; }
+        [Required] public DateTime birth { get; set; }
         public Phone phone { get; set; }
-        [Required]
-        public List<CreateAdressRequest> adresses;
-        [Required]
-        public List<CreateCardRequest> cards;
+ 
+        public List<CreateAdressRequest> adresses { get; set; }
+
+        public List<CreateCardRequest> cards { get; set; }
 
     }
 }

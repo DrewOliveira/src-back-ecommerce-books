@@ -16,5 +16,6 @@ namespace LesBooks.Application.Requests
         [Required] public string securityCode { get; set; }
         [Required] public bool pricipal { get; set; }
         [Required] public Flag flag { get; set; }
+        [Required] public DateTime expiration { get;  set; }
     }
 }

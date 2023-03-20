@@ -7,7 +7,7 @@ using System.Net;
 
 namespace LesBooks.API.Controllers
 {
-    [Route("api/Adress")]
+    [Route("api/adress")]
     [ApiController]
     public class AdressController : ControllerBase
     {
@@ -17,10 +17,21 @@ namespace LesBooks.API.Controllers
             _adressService = adressService; 
         }
 
-        [HttpGet]
-        public async Task<ActionResult<dynamic>> GetAsync()
+        [HttpGet("all/{id}")]
+        public async Task<ActionResult<dynamic>> GetAsync(int id)
         {
-            var response = await this._adressService.ListAdresses();
+            var response = await this._adressService.ListAdresses(id);
+
+            if (response.erros.Count == 0)
+            {
+                return StatusCode((int)HttpStatusCode.OK, response.adress);
+            }
+            return StatusCode((int)HttpStatusCode.InternalServerError, response.erros);
+        }
+        [HttpGet("{id}")]
+        public async Task<ActionResult<dynamic>> GetById(int id)
+        {
+            var response = await this._adressService.GetAdress(id);
 
             if (response.erros.Count == 0)
             {
@@ -30,14 +41,16 @@ namespace LesBooks.API.Controllers
         }
 
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<dynamic>> Get(int id)
+        [HttpGet("cep/{cep}")]
+        public async Task<ActionResult<dynamic>> Get(string cep)
         {
-            var response = await this._adressService.ListAdresses();
+            var response = await this._adressService.GetAdressByCep(cep);
 
             if (response.erros.Count == 0)
             {
-                return StatusCode((int)HttpStatusCode.OK, response.adress.FirstOrDefault());
+                if (response.adress == null)
+                    return StatusCode((int)HttpStatusCode.NoContent);
+                return StatusCode((int)HttpStatusCode.OK, response.adress);
             }
             return StatusCode((int)HttpStatusCode.InternalServerError, response.erros);
         }

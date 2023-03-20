@@ -8,11 +8,12 @@ namespace LesBooks.DAL
         private SqlConnection conn;
         protected SqlCommand cmd;
 
-        string connectionString = "Data Source=NB-SIN-CM471N3\\SQLEXPRESS;Initial Catalog=LesBooks;Integrated Security=True";
+        string connectionString = "Data Source=NB-SIN-CM471N3\\SQLEXPRESS;Initial Catalog=LesBooks2;Integrated Security=True";
         public Connection()
         {
             conn = new SqlConnection(connectionString);
             cmd = conn.CreateCommand();
+            cmd.Connection = conn;
         }
 
         protected void OpenConnection()
@@ -25,6 +26,7 @@ namespace LesBooks.DAL
         {
             if (conn.State == System.Data.ConnectionState.Open)
                 conn.Close();
+            cmd.Parameters.Clear();
         }
     }
 }

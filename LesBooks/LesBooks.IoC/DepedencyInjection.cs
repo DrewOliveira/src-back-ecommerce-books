@@ -2,6 +2,8 @@
 using LesBooks.Application.Services.Client;
 using LesBooks.Application.Services.Interfaces;
 using LesBooks.DAL;
+using LesBooks.DAL.DAOs;
+using LesBooks.DAL.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -27,6 +29,7 @@ namespace LesBooks.IoC
             services.AddScoped<IAdressDAO, AdressDAO>();
             services.AddScoped<ICardDAO, CardDAO>();
             services.AddScoped<IUserDAO, UserDAO>();
+            services.AddScoped<IFlagDAO, FlagDAO>();
 
             return services;
         }

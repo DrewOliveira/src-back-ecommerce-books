@@ -13,7 +13,7 @@ namespace LesBooks.Application.Services.Interfaces
         Task<CreateCardResponse> CreateCard(CreateCardRequest request);
         Task<UpdateCardResponse> UpdateCard(UpdateCardRequest request);
         Task<ResponseBase> DeleteCard(int id);
-        Task<ListCardsResponse> ListCardes();
-        Task<ListCardsResponse> GetCarde(int id);
+        Task<ListCardsResponse> ListCardes(int id);
+        Task<GetCardResponse> GetCarde(int id);
     }
 }

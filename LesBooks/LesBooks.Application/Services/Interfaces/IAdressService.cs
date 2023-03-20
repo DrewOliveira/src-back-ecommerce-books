@@ -13,7 +13,8 @@ namespace LesBooks.Application.Services.Interfaces
         Task<CreateAdressResponse> CreateAdress(CreateAdressRequest request);
         Task<UpdateAdressResponse> UpdateAdress(UpdateAdressRequest request);
         Task<ResponseBase> DeleteAdress(int id);
-        Task<ListAdressResponse> ListAdresses();
-        Task<ListAdressResponse> GetAdress(int id);
+        Task<ListAdressResponse> ListAdresses(int id);
+        Task<GetAdressResponse> GetAdress(int id);
+        Task<GetAdressResponse> GetAdressByCep(string id);
     }
 }

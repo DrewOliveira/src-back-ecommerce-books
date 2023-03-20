@@ -13,6 +13,7 @@ namespace LesBooks.Model.Entities
         public string name { get; set; }
         public string gender { get; set; }
         public string cpf { get; set; }
+        public DateTime birth { get; set; }
         public User user{ get; set; }
         public Phone phone { get; set; }
         public Ranking ranking { get; set; }

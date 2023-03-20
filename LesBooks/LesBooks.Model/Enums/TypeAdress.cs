@@ -8,5 +8,8 @@ namespace LesBooks.Model.Enums
 {
     public enum TypeAdress
     {
+        RESIDENCIAL = 0,
+        ENTREGA = 1,
+        COBRANCA = 2
     }
 }

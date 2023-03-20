@@ -33,6 +33,7 @@ namespace LesBooks.API
                        
                     });
             });
+            services.AddCors();
 
 
 
@@ -57,7 +58,7 @@ namespace LesBooks.API
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseAuthorization();
-
+            app.UseCors(options => options.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
             app.MapControllers();
         }
     }

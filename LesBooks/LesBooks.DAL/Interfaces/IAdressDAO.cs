@@ -12,7 +12,7 @@ namespace LesBooks.DAL
         public Adress CreateAdress(int id,Adress adress);
         public Adress UpdateAdress(Adress adress);
         public void DeleteAdress(Adress adress);
-        public List<Adress> GetAllAdresss();
+        public List<Adress> GetAllAdresss(int id);
         public Adress GetAdressById(int id);
     }
 }

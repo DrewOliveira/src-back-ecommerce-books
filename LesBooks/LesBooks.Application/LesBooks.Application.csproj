@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Correios.NET" Version="1.4.3" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\LesBooks.DAL\LesBooks.DAL.csproj" />
     <ProjectReference Include="..\LesBooks.Model\LesBooks.Model.csproj" />
   </ItemGroup>

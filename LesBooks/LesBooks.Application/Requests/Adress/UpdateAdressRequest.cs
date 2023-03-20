@@ -12,12 +12,12 @@ namespace LesBooks.Application.Requests
     {
         [Required]
         public int id{ get; set; }
-        [Required]
+     
         public string identification{ get; set; }
         [Required]
         public string street{ get; set; }
         [Required] public string number{ get; set; }
-        [Required] public string obs{ get; set; }
+         public string obs{ get; set; }
         [Required] public string zipCode{ get; set; }
         [Required] public string neighborhood{ get; set; }
         [Required] public string city{ get; set; }

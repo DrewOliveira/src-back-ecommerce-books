@@ -11,7 +11,7 @@ namespace LesBooks.API.Controllers
 {
     
 
-    [Route("v1/Client")]
+    [Route("v1/client")]
     [ApiController]
     public class ClientController : ControllerBase
     {
@@ -38,7 +38,7 @@ namespace LesBooks.API.Controllers
         public async Task<ActionResult<dynamic>> Get(int id)
         {
             var response = await this._clientService.ListClientes();
-
+           
             if (response.erros.Count == 0)
             {
                 return StatusCode((int)HttpStatusCode.OK, response.clients.FirstOrDefault());
@@ -51,6 +51,16 @@ namespace LesBooks.API.Controllers
         public async Task<ActionResult<dynamic>> Post([FromBody] CreateClientRequest request)
         {
             var response = await this._clientService.CreateClient(request);
+            if (response.erros.Count == 0)
+            {
+                return StatusCode((int)HttpStatusCode.OK);
+            }
+            return StatusCode((int)HttpStatusCode.InternalServerError, response.erros);
+        }
+        [HttpPost("changepassword")]
+        public async Task<ActionResult<dynamic>> ChangePassword([FromBody] ChangePasswordClientRequest request)
+        {
+            var response = await this._clientService.ChangePassword(request);
             if (response.erros.Count == 0)
             {
                 return StatusCode((int)HttpStatusCode.OK);

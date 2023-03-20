@@ -7,7 +7,7 @@ using System.Net;
 
 namespace LesBooks.API.Controllers
 {
-    [Route("api/Card")]
+    [Route("api/card")]
     [ApiController]
     public class CardController : ControllerBase
     {
@@ -17,27 +17,27 @@ namespace LesBooks.API.Controllers
             _cardService = cardService;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<dynamic>> GetAsync()
+        [HttpGet("{id}")]
+        public async Task<ActionResult<dynamic>> GetAsync(int id)
         {
-            var response = await this._cardService.ListCardes();
+            var response = await this._cardService.GetCarde(id);
 
             if (response.erros.Count == 0)
             {
-                return StatusCode((int)HttpStatusCode.OK, response.cards);
+                return StatusCode((int)HttpStatusCode.OK, response.card);
             }
             return StatusCode((int)HttpStatusCode.InternalServerError, response.erros);
         }
 
 
-        [HttpGet("{id}")]
+        [HttpGet("all/{id}")]
         public async Task<ActionResult<dynamic>> Get(int id)
         {
-            var response = await this._cardService.ListCardes();
+            var response = await this._cardService.ListCardes(id);
 
             if (response.erros.Count == 0)
             {
-                return StatusCode((int)HttpStatusCode.OK, response.cards.FirstOrDefault());
+                return StatusCode((int)HttpStatusCode.OK, response.cards);
             }
             return StatusCode((int)HttpStatusCode.InternalServerError, response.erros);
         }

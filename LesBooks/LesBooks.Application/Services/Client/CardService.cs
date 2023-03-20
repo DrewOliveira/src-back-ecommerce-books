@@ -2,6 +2,7 @@
 using LesBooks.Application.Responses;
 using LesBooks.Application.Services.Interfaces;
 using LesBooks.DAL;
+using LesBooks.Model.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,9 +18,26 @@ namespace LesBooks.Application.Services
         {
             _cardDAO = cardDAO;
         }
-        public Task<CreateCardResponse> CreateCard(CreateCardRequest request)
+        public async Task<CreateCardResponse> CreateCard(CreateCardRequest request)
         {
-            throw new NotImplementedException();
+            CreateCardResponse response = new CreateCardResponse();
+            try
+            {
+                Card card =  new Card();
+                card.name = request.name;
+                card.flag = request.flag;
+                card.pricipal = request.pricipal;
+                card.expiration = request.expiration;
+                card.securityCode = request.securityCode;
+                card.number = request.number;
+                _cardDAO.CreateCard(request.id_client, card);
+            }
+            catch (Exception ex)
+            {
+                response.erros.Add(new Erro { descricao = ex.Message, detalhes = ex });
+
+            }
+            return response;
         }
 
         public Task<ResponseBase> DeleteCard(int id)
@@ -27,19 +45,44 @@ namespace LesBooks.Application.Services
             throw new NotImplementedException();
         }
 
-        public Task<ListCardsResponse> GetCarde(int id)
+        public async Task<GetCardResponse> GetCarde(int id)
         {
-            throw new NotImplementedException();
+
+            GetCardResponse response = new GetCardResponse();
+            response.card = _cardDAO.GetCardById(id);
+
+            return response;
         }
 
-        public Task<ListCardsResponse> ListCardes()
+        public async Task<ListCardsResponse> ListCardes(int id)
         {
-            throw new NotImplementedException();
+            
+            ListCardsResponse response = new ListCardsResponse();
+            response.cards = _cardDAO.GetAllCards(id);
+            return response;
         }
 
-        public Task<UpdateCardResponse> UpdateCard(UpdateCardRequest request)
+        public async Task<UpdateCardResponse> UpdateCard(UpdateCardRequest request)
         {
-            throw new NotImplementedException();
+            UpdateCardResponse response = new UpdateCardResponse();
+            try
+            {
+                Card card = new Card();
+                card.Id = request.id;
+                card.name = request.name;
+                card.flag = request.flag;
+                card.pricipal = request.pricipal;
+                card.expiration = request.expiration;
+                card.securityCode = request.securityCode;
+                card.number = request.number;
+                _cardDAO.UpdateCard(card);
+            }
+            catch (Exception ex)
+            {
+                response.erros.Add(new Erro { descricao = ex.Message, detalhes = ex });
+
+            }
+            return response;
         }
     }
 }
