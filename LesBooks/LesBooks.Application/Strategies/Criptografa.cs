@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace LesBooks.Application.Strategies
 {
-    public class Criptografa
+    public static class Criptografa
     {
         private static readonly byte[] salt = new byte[] { 0x26, 0x19, 0x45, 0x3B, 0x5F, 0x5A, 0x6E, 0x21 };
         private const int Iterations = 1000;
         private const int KeySize = 256;
-        private string passPhrase = "chavedecriptografiautilizada";
-        public string Encrypt(string plainText)
+        private static string passPhrase = "chavedecriptografiautilizada";
+        public static string Encrypt(string plainText)
         {
             byte[] plainBytes = Encoding.UTF8.GetBytes(plainText);
             using (var aes = new AesManaged())
@@ -35,7 +35,7 @@ namespace LesBooks.Application.Strategies
                 }
             }
         }
-        public string Decrypt(string cipherText)
+        public static string Decrypt(string cipherText)
         {
             byte[] cipherBytes = Convert.FromBase64String(cipherText);
             using (var aes = new AesManaged())
