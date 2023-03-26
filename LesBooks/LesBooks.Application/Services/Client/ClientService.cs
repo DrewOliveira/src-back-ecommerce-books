@@ -2,6 +2,7 @@
 using LesBooks.Application.Requests;
 using LesBooks.Application.Responses;
 using LesBooks.Application.Services.Interfaces;
+using LesBooks.Application.Strategies;
 using LesBooks.DAL;
 using LesBooks.Model.Entities;
 using System;
@@ -23,8 +24,20 @@ namespace LesBooks.Application.Services
 
         public async Task<ResponseBase> ChangePassword(ChangePasswordClientRequest request)
         {
+            string oldPassword = request.oldPassword;
+            string nesPassword = request.newPassword;
+            int id = request.id;
+            Model.Entities.Client client = _clientDAO.GetClientById(id);
+            ResponseBase response = new ResponseBase();
+            try
+            {
+                
+            }
+            catch(Exception ex)
+            {
 
-            throw new NotImplementedException();
+            }
+            return response;
         }
 
         public async Task<CreateClientResponse> CreateClient(CreateClientRequest request)
@@ -37,9 +50,43 @@ namespace LesBooks.Application.Services
                 client.phone = request.phone;
                 client.name = request.name;
                 client.user = request.user;
+                client.user.password = Criptografa.Encrypt(client.user.password);
                 client.gender = request.gender;
                 client.birth = request.birth;
-               
+                client.adresses = new List<Adress>();
+                foreach (var adress in request.adresses)
+                {
+                    client.adresses.Add(new Adress()
+                    {
+                        typeAdress = adress.typeAdress,
+                        number = adress.number,
+                        city = adress.city,
+                        country = adress.country,
+                        identification = adress.identification,
+                        neighborhood = adress.neighborhood,
+                        obs = adress.obs,
+                        state = adress.state,
+                        street = adress.street,
+                        typeResidence = adress.typeResidence,
+                        typeStreet = adress.typeStreet,
+                        zipCode = adress.zipCode
+                    });
+                }
+                client.card = new List<Card>();
+                foreach (var card in request.cards)
+                {
+                    client.card.Add(new Card()
+                    {
+                        flag = card.flag,
+                        name = card.name,
+                        number = card.number,
+                        pricipal = card.pricipal,
+                        securityCode = card.securityCode,
+                        expiration = card.expiration
+                        
+                    });
+                }
+
                 _clientDAO.CreateClient(client);
             }
             catch (Exception ex)
@@ -55,112 +102,18 @@ namespace LesBooks.Application.Services
             throw new NotImplementedException();
         }
 
-        public async Task<ListClientsResponse> GetCliente(int id)
+        public async Task<GetClientResponse> GetCliente(int id)
         {
-            throw new NotImplementedException();
+            GetClientResponse response = new GetClientResponse();
+            response.client = _clientDAO.GetClientById(id);
+            return response;
         }
 
         public async Task<ListClientsResponse> ListClientes()
         {
 
             ListClientsResponse response = new ListClientsResponse();
-            response.clients = new List<Model.Entities.Client>();
-            Adress adress = new Adress()
-            {
-                id = 1,
-                street = "Rua Monte Alto res",
-                number = "343",
-                neighborhood = "Tipoia",
-                city = "Itaquaquecetuba",
-                state = "SP",
-                country = "Brasil",
-                obs = "",
-                typeAdress = Model.Enums.TypeAdress.RESIDENCIAL,
-                typeResidence = Model.Enums.TypeResidence.casa,
-                typeStreet = Model.Enums.TypeStreet.rua,
-                zipCode = "08577130"
-            };
-            Adress adress1 = new Adress()
-            {
-                id = 1,
-                street = "Rua Monte Alto ent",
-                number = "343",
-                neighborhood = "Tipoia",
-                city = "Itaquaquecetuba",
-                state = "SP",
-                country = "Brasil",
-                obs = "",
-                identification = "entrega 1",
-                typeAdress = Model.Enums.TypeAdress.ENTREGA,
-                typeResidence = Model.Enums.TypeResidence.casa,
-                typeStreet = Model.Enums.TypeStreet.rua,
-                zipCode = "08577130"
-            };
-            Adress adress2 = new Adress()
-            {
-                id = 1,
-                street = "Rua Monte Alto cob",
-                number = "343",
-                neighborhood = "Tipoia",
-                city = "Itaquaquecetuba",
-                state = "SP",
-                country = "Brasil",
-                obs = "",
-                typeAdress = Model.Enums.TypeAdress.COBRANCA,
-                typeResidence = Model.Enums.TypeResidence.casa,
-                typeStreet = Model.Enums.TypeStreet.rua,
-                zipCode = "08577130"
-            };
-            Card card = new Card()
-            {
-                Id = 1,
-                name = "Andrew Santos",
-                number = "0987123412341234",
-                pricipal = true,
-                securityCode = "123",
-                flag = new Flag()
-                {
-                    Id = 1,
-                    description = "Mastercard"
-                }
-            };
-            Card card1 = new Card()
-            {
-                Id = 2,
-                name = "Andrew Santos 2",
-                number = "4321432143214321",
-                pricipal = false,
-                securityCode = "321",
-                flag = new Flag()
-                {
-                    Id = 1,
-                    description = "Visa"
-                }
-            };
-            Model.Entities.Client client = new Model.Entities.Client()
-            {
-                name = "Andrew de oliveira",
-                cpf = "48241066805",
-                gender = "M",
-                user = new User()
-                {
-                    Id = 1,
-                    email = "andrew@teste.com",
-                    typeUser = Model.Enums.TypeUser.User
-                },
-                id = 1,
-                phone = new Phone() { id = 1, ddd = "11", phoneNumber = "973900330", typePhone = Model.Enums.TypePhone.celular },
-                ranking = new Ranking() { id = 1 , lesBookPoints = 1002}
-                
-            };
-            client.adresses = new List<Adress>();
-            client.adresses.Add(adress);
-            client.adresses.Add(adress1);
-            client.adresses.Add(adress2);
-            client.card = new List<Card>();
-            client.card.Add(card);
-            client.card.Add(card1);
-            response.clients.Add(client);
+            response.clients = _clientDAO.GetAllClients();
             return response;
         }
 

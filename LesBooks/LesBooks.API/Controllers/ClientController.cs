@@ -11,7 +11,7 @@ namespace LesBooks.API.Controllers
 {
     
 
-    [Route("v1/client")]
+    [Route("api/client")]
     [ApiController]
     public class ClientController : ControllerBase
     {
@@ -21,7 +21,7 @@ namespace LesBooks.API.Controllers
             _clientService = clientService;
         }
 
-        [HttpGet("{id}")]
+        [HttpGet]
         public async Task<ActionResult<dynamic>> GetAsync()
         {
             var response = await this._clientService.ListClientes();
@@ -34,14 +34,14 @@ namespace LesBooks.API.Controllers
         }
 
         
-        [HttpGet]
+        [HttpGet("{id}")]
         public async Task<ActionResult<dynamic>> Get(int id)
         {
-            var response = await this._clientService.ListClientes();
+            var response = await this._clientService.GetCliente(id);
            
             if (response.erros.Count == 0)
             {
-                return StatusCode((int)HttpStatusCode.OK, response.clients.FirstOrDefault());
+                return StatusCode((int)HttpStatusCode.OK, response.client);
             }
             return StatusCode((int)HttpStatusCode.InternalServerError, response.erros);
         }

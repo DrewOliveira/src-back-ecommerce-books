@@ -14,7 +14,7 @@ namespace LesBooks.Application.Services.Interfaces
         Task<UpdateClientResponse> UpdateClient(UpdateClientRequest request);
         Task<ResponseBase> DeleteClient(int id);
         Task<ListClientsResponse> ListClientes();
-        Task<ListClientsResponse> GetCliente(int id);
+        Task<GetClientResponse> GetCliente(int id);
         Task<ResponseBase> ChangePassword(ChangePasswordClientRequest request);
     }
 }

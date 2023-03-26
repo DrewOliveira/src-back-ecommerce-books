@@ -57,8 +57,9 @@ namespace LesBooks.DAL
                 OpenConnection();
                 string sql = "SELECT * FROM users WHERE id_user = @id_user";
 
-                cmd.Parameters.AddWithValue("@id_user", user.Id);
-
+                cmd.Parameters.AddWithValue("@id_user", id);
+                cmd.CommandText = sql;
+                reader = cmd.ExecuteReader();
                 if (reader.Read())
                 {
                     user = new User
@@ -69,8 +70,6 @@ namespace LesBooks.DAL
                         typeUser = (Model.Enums.TypeUser)Convert.ToInt32(reader["typeUser"])
                     };
                 }
-
-                cmd.ExecuteNonQuery();
             }
             catch (Exception)
             {
