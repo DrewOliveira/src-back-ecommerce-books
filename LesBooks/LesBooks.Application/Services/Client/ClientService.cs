@@ -24,8 +24,20 @@ namespace LesBooks.Application.Services
 
         public async Task<ResponseBase> ChangePassword(ChangePasswordClientRequest request)
         {
+            string oldPassword = request.oldPassword;
+            string nesPassword = request.newPassword;
+            int id = request.id;
+            Model.Entities.Client client = _clientDAO.GetClientById(id);
+            ResponseBase response = new ResponseBase();
+            try
+            {
+                
+            }
+            catch(Exception ex)
+            {
 
-            throw new NotImplementedException();
+            }
+            return response;
         }
 
         public async Task<CreateClientResponse> CreateClient(CreateClientRequest request)
