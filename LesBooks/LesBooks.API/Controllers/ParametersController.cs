@@ -17,7 +17,7 @@ namespace LesBooks.API.Controllers
             Flag flag = new Flag()
             {
                 Id = 1,
-                description = "Mastercard"
+                description = "MasterCard"
             };
             Flag flag1 = new Flag()
             {

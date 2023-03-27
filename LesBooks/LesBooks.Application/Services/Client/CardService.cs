@@ -26,7 +26,7 @@ namespace LesBooks.Application.Services
                 Card card =  new Card();
                 card.name = request.name;
                 card.flag = request.flag;
-                card.pricipal = request.pricipal;
+                card.principal = request.principal;
                 card.expiration = request.expiration;
                 card.securityCode = request.securityCode;
                 card.number = request.number;
@@ -71,7 +71,7 @@ namespace LesBooks.Application.Services
                 card.Id = request.id;
                 card.name = request.name;
                 card.flag = request.flag;
-                card.pricipal = request.pricipal;
+                card.principal = request.principal;
                 card.expiration = request.expiration;
                 card.securityCode = request.securityCode;
                 card.number = request.number;

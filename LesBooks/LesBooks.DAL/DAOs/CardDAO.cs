@@ -29,7 +29,7 @@ namespace LesBooks.DAL
                 cmd.Parameters.AddWithValue("@number", card.number);
                 cmd.Parameters.AddWithValue("@name", card.name);
                 cmd.Parameters.AddWithValue("@securityCode", card.securityCode);
-                cmd.Parameters.AddWithValue("@principal", card.pricipal);
+                cmd.Parameters.AddWithValue("@principal", card.principal);
                 cmd.Parameters.AddWithValue("@expiration", card.expiration);
                 cmd.CommandText = sql;
                 card.Id = Convert.ToInt32(cmd.ExecuteScalar());
@@ -89,7 +89,7 @@ namespace LesBooks.DAL
                         number = reader["number"].ToString(),
                         name = reader["name"].ToString(),
                         securityCode = reader["securityCode"].ToString(),
-                        pricipal = Convert.ToBoolean(reader["principal"]),
+                        principal = Convert.ToBoolean(reader["principal"]),
                         expiration = Convert.ToDateTime(reader["expiration"])
                     };
 
@@ -134,7 +134,7 @@ namespace LesBooks.DAL
                         number = reader["number"].ToString(),
                         name = reader["name"].ToString(),
                         securityCode = reader["securityCode"].ToString(),
-                        pricipal = Convert.ToBoolean(reader["principal"]),
+                        principal = Convert.ToBoolean(reader["principal"]),
                         expiration = Convert.ToDateTime(reader["expiration"])
                     };
 
@@ -166,7 +166,7 @@ namespace LesBooks.DAL
                 cmd.Parameters.AddWithValue("@number", card.number);
                 cmd.Parameters.AddWithValue("@name", card.name);
                 cmd.Parameters.AddWithValue("@securityCode", card.securityCode);
-                cmd.Parameters.AddWithValue("@principal", card.pricipal);
+                cmd.Parameters.AddWithValue("@principal", card.principal);
                 cmd.Parameters.AddWithValue("@expiration", card.expiration);
                 cmd.CommandText = sql;
                 cmd.ExecuteNonQuery();

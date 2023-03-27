@@ -50,7 +50,7 @@ namespace LesBooks.Application.Services
                 client.phone = request.phone;
                 client.name = request.name;
                 client.user = request.user;
-                client.user.password = Criptografa.Encrypt(client.user.password);
+                //client.user.password = Criptografa.Encrypt(client.user.password);
                 client.gender = request.gender;
                 client.birth = request.birth;
                 client.adresses = new List<Adress>();
@@ -80,7 +80,7 @@ namespace LesBooks.Application.Services
                         flag = card.flag,
                         name = card.name,
                         number = card.number,
-                        pricipal = card.pricipal,
+                        principal = card.principal,
                         securityCode = card.securityCode,
                         expiration = card.expiration
                         

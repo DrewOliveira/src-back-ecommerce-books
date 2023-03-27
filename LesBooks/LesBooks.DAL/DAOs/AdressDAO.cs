@@ -50,9 +50,25 @@ namespace LesBooks.DAL
             return adress;
         }
 
-        public void DeleteAdress(Adress adress)
+        public void DeleteAdress(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+
+                string sql = "DELETE FROM adress WHERE id_user = @id_user";
+                cmd.CommandText = sql;
+                cmd.Parameters.AddWithValue(" @id_user", id);
+                cmd.ExecuteNonQuery();
+
+            }
+            catch(Exception ex)
+            {
+
+            }
+            finally
+            {
+
+            }
         }
 
         public Adress GetAdressById(int id)
