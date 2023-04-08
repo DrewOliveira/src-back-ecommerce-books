@@ -8,7 +8,7 @@ namespace LesBooks.DAL
         private SqlConnection conn;
         protected SqlCommand cmd;
 
-        string connectionString = "Data Source=NB-SIN-CM471N3\\SQLEXPRESS;Initial Catalog=LesBooks2;Integrated Security=True";
+        string connectionString = "Data Source=DESKTOP-MVIAPPB\\SQLEXPRESS;Initial Catalog=LesBooks2;Integrated Security=True";
         public Connection()
         {
             conn = new SqlConnection(connectionString);
