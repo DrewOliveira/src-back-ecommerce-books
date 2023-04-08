@@ -1,5 +1,6 @@
 ﻿using LesBooks.Application.Services;
 using LesBooks.Application.Services.Client;
+using LesBooks.Application.Services.Book;
 using LesBooks.Application.Services.Interfaces;
 using LesBooks.DAL;
 using LesBooks.DAL.DAOs;
@@ -23,6 +24,7 @@ namespace LesBooks.IoC
             services.AddScoped<IClientService, ClientService>();
             services.AddScoped<IAdressService, AdressService>();
             services.AddScoped<ICardService, CardService>();
+            services.AddScoped<IBookService, BookService>();
 
             //Daos
             services.AddScoped<IClientDAO, ClientDAO>();
@@ -30,6 +32,15 @@ namespace LesBooks.IoC
             services.AddScoped<ICardDAO, CardDAO>();
             services.AddScoped<IUserDAO, UserDAO>();
             services.AddScoped<IFlagDAO, FlagDAO>();
+            services.AddScoped<IBookDAO, BookDAO>();
+            services.AddScoped<IBookCategoryDAO, BookCategoryDAO>();
+            services.AddScoped<IAuthorDAO, AuthorDAO>();
+            services.AddScoped<IPricingDAO, PricingDAO>();
+            services.AddScoped<IPublisherDAO, PublisherDAO>();
+            services.AddScoped<IStockDAO, StockDAO>();
+            services.AddScoped<IStockEntryHistoryDAO, StockEntryHistoryDAO>();
+            services.AddScoped<IActivationStatusReasonDAO, ActivationStatusReasonDAO>();
+            services.AddScoped<ICategoryStatusReasonDAO, CategoryStatusReasonDAO>();
 
             return services;
         }

@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <Folder Include="Requests\Coupon\" />
+    <Folder Include="Requests\Livro\" />
   </ItemGroup>
 
 </Project>
