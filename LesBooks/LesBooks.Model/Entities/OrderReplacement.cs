@@ -4,11 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LesBooks.Model.Enums
+namespace LesBooks.Model.Entities
 {
-    public  enum TypeCoupon
+    public class OrderReplacement: Order
     {
-        PROMOTIONAL = 1,
-        REPLACEMENT = 2
     }
 }

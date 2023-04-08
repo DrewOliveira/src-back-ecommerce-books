@@ -1,6 +1,5 @@
 ﻿using LesBooks.Application.Services;
 using LesBooks.Application.Services.Client;
-using LesBooks.Application.Services.Book;
 using LesBooks.Application.Services.Interfaces;
 using LesBooks.DAL;
 using LesBooks.DAL.DAOs;
@@ -25,6 +24,7 @@ namespace LesBooks.IoC
             services.AddScoped<IAdressService, AdressService>();
             services.AddScoped<ICardService, CardService>();
             services.AddScoped<IBookService, BookService>();
+            services.AddScoped<IStockService, StockService>();
 
             //Daos
             services.AddScoped<IClientDAO, ClientDAO>();

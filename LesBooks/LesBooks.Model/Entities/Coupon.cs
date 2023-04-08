@@ -11,7 +11,9 @@ namespace LesBooks.Model.Entities
     {
         public int id { get; set; }
         public string description { get; set; }
-        public double valor { get; set; }
+        public double value { get; set; }
+
+        public double active { get; set; }
         public TypeCoupon typeCoupon { get; set; }
     }
 }

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace LesBooks.Model.Enums
 {
-    public  enum TypeCoupon
+    public enum TypeOrder
     {
-        PROMOTIONAL = 1,
-        REPLACEMENT = 2
+        REPLACEMENT = 1,
+        PURCHASE = 2
     }
 }
