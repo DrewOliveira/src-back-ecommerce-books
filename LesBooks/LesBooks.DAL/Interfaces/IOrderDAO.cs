@@ -4,11 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LesBooks.Model.Enums
+namespace LesBooks.DAL.Interfaces
 {
-    public  enum TypeCoupon
+    public interface IOrderDAO
     {
-        PROMOTIONAL = 1,
-        REPLACEMENT = 2
     }
 }
