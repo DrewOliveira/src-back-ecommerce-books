@@ -12,6 +12,6 @@ namespace LesBooks.Model.Entities
         public int quantity { get; set; }
 
         public Double totalValue { get; set; }
-        public Book books { get; set; }
+        public Book book { get; set; }
     }
 }

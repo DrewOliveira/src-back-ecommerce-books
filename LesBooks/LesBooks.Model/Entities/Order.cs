@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LesBooks.Model.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,5 +18,7 @@ namespace LesBooks.Model.Entities
         public List<Item> items { get; set; }
 
         public TypeOrder type { get; set; }
+
+        public StatusOrder statusOrder { get; set; }
     }
 }

@@ -13,7 +13,7 @@ namespace LesBooks.Model.Entities
         public string description { get; set; }
         public double value { get; set; }
 
-        public double active { get; set; }
+        public Boolean active { get; set; }
         public TypeCoupon typeCoupon { get; set; }
     }
 }

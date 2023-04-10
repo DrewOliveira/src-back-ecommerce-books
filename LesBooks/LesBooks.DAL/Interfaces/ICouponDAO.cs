@@ -7,10 +7,8 @@ using System.Threading.Tasks;
 
 namespace LesBooks.DAL.Interfaces
 {
-    public interface IBookDAO
+    public interface ICouponDAO
     {
-        public List<Book> GetAllBooks();
-
-        public Book GetBookById(int id);
+        public Coupon GetCouponById(int id)
     }
 }

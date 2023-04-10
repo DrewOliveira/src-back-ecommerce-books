@@ -25,6 +25,7 @@ namespace LesBooks.IoC
             services.AddScoped<ICardService, CardService>();
             services.AddScoped<IBookService, BookService>();
             services.AddScoped<IStockService, StockService>();
+            services.AddScoped<IOrderService, OrderService>();
 
             //Daos
             services.AddScoped<IClientDAO, ClientDAO>();
@@ -41,6 +42,11 @@ namespace LesBooks.IoC
             services.AddScoped<IStockEntryHistoryDAO, StockEntryHistoryDAO>();
             services.AddScoped<IActivationStatusReasonDAO, ActivationStatusReasonDAO>();
             services.AddScoped<ICategoryStatusReasonDAO, CategoryStatusReasonDAO>();
+
+            services.AddScoped<ICouponDAO, CouponDAO>();
+            services.AddScoped<IPaymentDAO, PaymentDAO>();
+            services.AddScoped<IItemDAO, ItemDAO>();
+            services.AddScoped<IOrderDAO, OrderDAO>();
 
             return services;
         }

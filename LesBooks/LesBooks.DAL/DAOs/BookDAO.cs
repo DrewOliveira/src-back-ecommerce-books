@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using static System.Reflection.Metadata.BlobBuilder;
 
 namespace LesBooks.DAL
 {
@@ -89,6 +90,65 @@ namespace LesBooks.DAL
             }
 
             return books;
+        }
+
+        public Book GetBookById(int id)
+        {
+            Book book = null;
+
+            try
+            {
+                string sql = "SELECT * FROM book where id = @id_book";
+
+                OpenConnection();
+
+                cmd.Parameters.AddWithValue("@id_book", id);
+                cmd.CommandText = sql;
+                reader = cmd.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    Dimension dimensionData = new Dimension
+                    {
+                        height = Convert.ToDouble(reader["height"]),
+                        width = Convert.ToDouble(reader["width"]),
+                        weight = Convert.ToDouble(reader["weight"]),
+                        depth = Convert.ToDouble(reader["depth"])
+                    };
+
+                    book = new Book();
+
+                    book.id = (int)reader["id"];
+                    book.title = (string)reader["title"];
+                    book.publicationYear = Convert.ToDateTime(reader["publicationYear"]);
+                    book.edition = (string)reader["edition"];
+                    book.ISBN = (string)reader["ISBN"];
+                    book.pageCount = (int)reader["pageCount"];
+                    book.synopsis = (string)reader["synopsis"];
+                    book.active = Convert.ToBoolean(reader["active"]);
+                    book.barcode = (string)reader["barcode"];
+                    book.dimension = dimensionData;
+                    book.categories = _bookCategoryDAO.GetAllCategoryByBookId(Convert.ToInt32((int)reader["id"]));
+                    book.author = _authorDAO.GetAuthorById(Convert.ToInt32(reader["author_id"]));
+                    book.pricing = _pricingDAO.GetPricingById(Convert.ToInt32(reader["pricing_id"]));
+                    book.publisher = _publisherDAO.GetPublisherById(Convert.ToInt32(reader["publisher_id"]));
+                    book.stock = _stockDAO.GetStockByBookId(Convert.ToInt32((int)reader["id"]));
+                    book.activationStatusReason = _activationStatusReasonDAO.GetActivationStatusReasonById(Convert.ToInt32(reader["activation_status_reason_id"]));
+                }
+
+                reader.Close();
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                CloseConnection();
+            }
+
+            return book;
         }
     }
 }
