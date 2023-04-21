@@ -20,5 +20,7 @@ namespace LesBooks.Model.Entities
         public TypeOrder type { get; set; }
 
         public StatusOrder statusOrder { get; set; }
+
+        public Client client { get; set; }
     }
 }

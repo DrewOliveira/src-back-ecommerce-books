@@ -1,5 +1,7 @@
 ﻿using LesBooks.Application.Requests;
+using LesBooks.Application.Requests.Order;
 using LesBooks.Application.Responses;
+using LesBooks.Model.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
