@@ -4,11 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static LesBooks.DAL.Interfaces.IOrderPurchaseDAO;
 
 namespace LesBooks.DAL.Interfaces
 {
-    public interface IItemDAO
+    public interface IOrderPurchaseDAO
     {
-        public Item CreateItem(Item item, int order_id);
+        public OrderPurchase CreatePurchase(OrderPurchase purchase);
     }
 }

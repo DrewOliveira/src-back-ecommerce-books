@@ -15,5 +15,7 @@ namespace LesBooks.Model.Entities
         public Boolean aprroved { get; set; }
 
         public Card card { get; set; }
+
+        public Order order { get; set; }
     }
 }

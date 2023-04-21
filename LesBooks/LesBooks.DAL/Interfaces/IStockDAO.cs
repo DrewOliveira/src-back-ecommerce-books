@@ -10,5 +10,7 @@ namespace LesBooks.DAL.Interfaces
     public interface IStockDAO
     {
         public Stock GetStockByBookId(int id);
+
+        public void UpdateQuantityStockByBookId(int quantity, int book_id);
     }
 }

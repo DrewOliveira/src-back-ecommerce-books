@@ -66,13 +66,13 @@ namespace LesBooks.DAL
                     book.active = Convert.ToBoolean(reader["active"]);
                     book.barcode = (string)reader["barcode"];
                     book.dimension = dimensionData;
+                    book.value = Convert.ToDouble(reader["value"]);
                     book.categories = _bookCategoryDAO.GetAllCategoryByBookId(Convert.ToInt32((int)reader["id"]));
                     book.author = _authorDAO.GetAuthorById(Convert.ToInt32(reader["author_id"]));
                     book.pricing = _pricingDAO.GetPricingById(Convert.ToInt32(reader["pricing_id"]));
                     book.publisher = _publisherDAO.GetPublisherById(Convert.ToInt32(reader["publisher_id"]));
                     book.stock = _stockDAO.GetStockByBookId(Convert.ToInt32((int)reader["id"]));
                     book.activationStatusReason = _activationStatusReasonDAO.GetActivationStatusReasonById(Convert.ToInt32(reader["activation_status_reason_id"]));
-                    
 
                     books.Add(book);
                 }
@@ -128,6 +128,7 @@ namespace LesBooks.DAL
                     book.active = Convert.ToBoolean(reader["active"]);
                     book.barcode = (string)reader["barcode"];
                     book.dimension = dimensionData;
+                    book.value = Convert.ToDouble(reader["value"]);
                     book.categories = _bookCategoryDAO.GetAllCategoryByBookId(Convert.ToInt32((int)reader["id"]));
                     book.author = _authorDAO.GetAuthorById(Convert.ToInt32(reader["author_id"]));
                     book.pricing = _pricingDAO.GetPricingById(Convert.ToInt32(reader["pricing_id"]));

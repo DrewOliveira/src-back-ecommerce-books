@@ -44,5 +44,26 @@ namespace LesBooks.DAL.DAOs
             }
             return stock;
         }
+
+        public void UpdateQuantityStockByBookId(int quantity, int book_id)
+        {
+            try
+            {
+                OpenConnection();
+                string sql = "UPDATE stock SET quantity = quantity - @quantity WHERE book_id = @book_id";
+                cmd.Parameters.AddWithValue("@book_id", book_id);
+                cmd.Parameters.AddWithValue("@quantity", quantity);
+                cmd.CommandText = sql;
+                cmd.ExecuteNonQuery();
+            }
+            catch
+            {
+                throw;
+            }
+            finally
+            {
+                CloseConnection();
+            }
+        }
     }
 }

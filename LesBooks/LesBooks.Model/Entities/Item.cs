@@ -13,5 +13,7 @@ namespace LesBooks.Model.Entities
 
         public Double totalValue { get; set; }
         public Book book { get; set; }
+
+        public Order order { get; set; }
     }
 }

@@ -46,7 +46,7 @@ namespace LesBooks.IoC
             services.AddScoped<ICouponDAO, CouponDAO>();
             services.AddScoped<IPaymentDAO, PaymentDAO>();
             services.AddScoped<IItemDAO, ItemDAO>();
-            services.AddScoped<IOrderDAO, OrderDAO>();
+            services.AddScoped<IOrderPurchaseDAO, OrderPurchaseDAO>();
 
             return services;
         }
