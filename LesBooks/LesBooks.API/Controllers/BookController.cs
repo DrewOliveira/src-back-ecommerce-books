@@ -30,6 +30,17 @@ namespace LesBooks.API.Controllers
             }
             return StatusCode((int)HttpStatusCode.InternalServerError, response.erros);
         }
+        [HttpGet("{id}")]
+        public async Task<ActionResult<dynamic>> GetBook(int id)
+        {
+            var response = await this._bookService.GetBook(id);
+
+            if (response.erros.Count == 0)
+            {
+                return StatusCode((int)HttpStatusCode.OK, response.book);
+            }
+            return StatusCode((int)HttpStatusCode.InternalServerError, response.erros);
+        }
 
         [HttpGet("{id}/stock/validate/{quantity}")]
         public async Task<ActionResult<dynamic>> ValidateStockByBookId(int id, int quantity)

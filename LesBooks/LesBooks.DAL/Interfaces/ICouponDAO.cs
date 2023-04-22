@@ -10,5 +10,9 @@ namespace LesBooks.DAL.Interfaces
     public interface ICouponDAO
     {
         public Coupon GetCouponById(int id);
+
+        public List<Coupon> GetAllCouponsByOrderId(int orders_id);
+        public List<Coupon> GetAllCouponsByClientId(int client_id);
+        public List<Coupon> GetCouponByDescription(string description, int client_id);
     }
 }

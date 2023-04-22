@@ -24,7 +24,9 @@ namespace LesBooks.Application.Services
         IOrderPurchaseDAO _orderPurchaseDAO;
         IClientDAO _clientDAO;
         IStockDAO _stockDAO;
-        public OrderService(IBookDAO bookDAO, ICardDAO cardDAO, ICouponDAO couponDAO, IAdressDAO adressDAO, IOrderPurchaseDAO orderPurchaseDAO, IClientDAO clientDAO, IStockDAO stockDAO)
+        IOrderDAO _orderDAO;
+        IAdressService _adressService;
+        public OrderService(IBookDAO bookDAO, ICardDAO cardDAO, ICouponDAO couponDAO, IAdressDAO adressDAO, IOrderPurchaseDAO orderPurchaseDAO, IClientDAO clientDAO, IStockDAO stockDAO, IOrderDAO orderDAO, IAdressService adressService)
         {
             _bookDAO = bookDAO;
             _cardDAO = cardDAO;
@@ -33,6 +35,8 @@ namespace LesBooks.Application.Services
             _orderPurchaseDAO = orderPurchaseDAO;
             _clientDAO = clientDAO;
             _stockDAO = stockDAO;
+            _orderDAO = orderDAO;
+            _adressService = adressService;
         }
 
         public async Task<CreateOrderPurchaseResponse> CreateOrderPurchase(CreateOrderPurchaseRequest request)
@@ -42,10 +46,23 @@ namespace LesBooks.Application.Services
             List<Coupon> coupons = new List<Coupon>();
             OrderPurchase orderPurchase = new OrderPurchase();
             CreateOrderPurchaseResponse response = new CreateOrderPurchaseResponse();
-            
+
             try
             {
                 itens = await this.GetItens(request.itens);
+
+                if (!this.CheckoutQuantityStock(itens))
+                {
+                    response.erros.Add(new Erro
+                    {
+                        descricao = "Quantity not possible for itens this purchase",
+                        detalhes = new Exception("Stock Limit"),
+                        cod = "404"
+                    });
+
+                    return response;
+                }
+
                 payments = await this.GetPayments(request.payments);
                 coupons = await this.GetCoupons(request.coupons);
 
@@ -61,7 +78,7 @@ namespace LesBooks.Application.Services
                 orderPurchase.statusOrder = StatusOrder.PROCESSING;
 
                 _orderPurchaseDAO.CreatePurchase(orderPurchase);
-                
+
             }
             catch (Exception ex)
             {
@@ -80,6 +97,30 @@ namespace LesBooks.Application.Services
             return response;
         }
 
+        private Boolean CheckoutQuantityStock(List<Item> itens)
+        {
+            Boolean checkout = true;
+
+            try
+            {
+                foreach (var item in itens)
+                {
+                    Stock stock = _stockDAO.GetStockByBookId(item.book.id);
+
+                    if (checkout && stock.quantity < item.quantity)
+                    {
+                        checkout = false;
+                    }
+                }
+
+                return checkout;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         private void UpdateStockQuantity(List<Item> itens)
         {
             try
@@ -94,7 +135,7 @@ namespace LesBooks.Application.Services
                 throw ex;
             }
         }
-        
+
         private Double GetTotalValue(List<Item> itens, List<Coupon> coupons)
         {
             double totalValueMonted = 0;
@@ -108,7 +149,7 @@ namespace LesBooks.Application.Services
             {
                 totalValueMonted = totalValueMonted - coupon.value;
             }
-            
+
             return totalValueMonted;
         }
 
@@ -130,11 +171,11 @@ namespace LesBooks.Application.Services
 
                 return itens;
             }
-            catch(Exception ex) 
+            catch (Exception ex)
             {
                 throw ex;
             }
-            
+
         }
 
         private async Task<List<Payment>> GetPayments(List<PaymentPurchaseRequest> requestPayments)
@@ -180,5 +221,135 @@ namespace LesBooks.Application.Services
                 throw ex;
             }
         }
+
+        public async Task<GetAllOrdersPurchaseByClientIdResponse> GetOrderPurchaseByClientId(int client_id)
+        {
+            GetAllOrdersPurchaseByClientIdResponse OrdersPurchaseResponse = new GetAllOrdersPurchaseByClientIdResponse();
+
+            try
+            {
+                OrdersPurchaseResponse.purchases = _orderPurchaseDAO.GetOrderPurchases(client_id);
+            }
+            catch (Exception err)
+            {
+                OrdersPurchaseResponse.erros.Add(new Erro
+                {
+                    descricao = err.Message,
+                    detalhes = err
+                });
+            }
+
+            return OrdersPurchaseResponse;
+        }
+
+        public async Task<GetOrderByIdResponse> GetOrderById(int order_id)
+        {
+            GetOrderByIdResponse response = new GetOrderByIdResponse();
+            try
+            {
+                response.order_generic = _orderDAO.GetOrderById(order_id);
+            }
+            catch (Exception ex)
+            {
+                response.erros.Add(new Erro { descricao = ex.Message, detalhes = ex });
+
+            }
+
+            return response;
+        }
+
+        public async Task<GetOrdersResponse> GetOrders()
+        {
+            GetOrdersResponse response = new GetOrdersResponse();
+            try
+            {
+                response.orders = _orderPurchaseDAO.GetOrderPurchases(null);
+            }
+            catch (Exception ex)
+            {
+                response.erros.Add(new Erro { descricao = ex.Message, detalhes = ex });
+
+            }
+
+            return response;
+        }
+        public async Task<ResponseBase> PatchOrder(PatchOrderRequest request)
+        {
+
+            ResponseBase response = new ResponseBase();
+            try
+            {
+                Order order = _orderPurchaseDAO.(request.OrderId);
+                StatusOrder newStatus = (StatusOrder)request.statusId;
+                if ((int)order.statusOrder >= (int)newStatus)
+                {
+                    throw new Exception("Alteração de status não disponivél para o status encaminhado."); 
+                }
+            }
+            catch (Exception ex)
+            {
+                response.erros = new List<Erro>
+                {
+                    new Erro(){
+                        descricao = ex.Message,
+                        detalhes = ex
+                    }
+                };
+            }
+            return response;
+            } 
+        
+        
+ 
+        public decimal DeliveryPrice(string zipcode)
+        {
+            string state =  _adressService.GetAdressByCep(zipcode).Result.adress.state;
+            // Distâncias em km entre São Paulo e os demais estados brasileiros
+            Dictionary<string, int> distancias = new Dictionary<string, int>()
+            {
+                { "AC", 3600 },
+                { "AL", 2200 },
+                { "AP", 3100 },
+                { "AM", 3100 },
+                { "BA", 1700 },
+                { "CE", 2600 },
+                { "DF", 1000 },
+                { "ES", 900 },
+                { "GO", 900 },
+                { "MA", 2500 },
+                { "MT", 1700 },
+                { "MS", 1100 },
+                { "MG", 600 },
+                { "PA", 2500 },
+                { "PB", 2300 },
+                { "PR", 400 },
+                { "PE", 2400 },
+                { "PI", 2500 },
+                { "RJ", 400 },
+                { "RN", 2500 },
+                { "RS", 1200 },
+                { "RO", 2700 },
+                { "RR", 3400 },
+                { "SC", 700 },
+                { "SE", 2100 },
+                { "TO", 1700 },
+                {"SP",500 }
+            };
+
+            // Verifica se o estado de destino existe na lista de distâncias
+            if (distancias.ContainsKey(state))
+            {
+                int distancia = distancias[state];
+                decimal valorFrete = distancia * 0.05m; // Exemplo: Valor fixo de R$ 0,05 por km
+
+                return valorFrete;
+            }
+            else
+            {
+                // Estado de destino não encontrado na lista
+                throw new ArgumentException("Estado de destino inválido.");
+            }
+        }
+
     }
 }
