@@ -46,6 +46,18 @@ namespace LesBooks.Application.Services
             try
             {
                 itens = await this.GetItens(request.itens);
+
+                if (!this.CheckoutQuantityStock(itens))
+                {
+                    response.erros.Add(new Erro { 
+                        descricao = "Quantity not possible for itens this purchase", 
+                        detalhes = new Exception("Stock Limit"),
+                        cod = "404"
+                    });
+                    
+                    return response;
+                }
+
                 payments = await this.GetPayments(request.payments);
                 coupons = await this.GetCoupons(request.coupons);
 
@@ -78,6 +90,30 @@ namespace LesBooks.Application.Services
             }
 
             return response;
+        }
+
+        private Boolean CheckoutQuantityStock(List<Item> itens)
+        {
+            Boolean checkout = true;
+
+            try
+            {
+                foreach (var item in itens)
+                {
+                    Stock stock = _stockDAO.GetStockByBookId(item.book.id);
+
+                    if (checkout && stock.quantity < item.quantity)
+                    {
+                        checkout = false;
+                    }
+                }
+
+                return checkout;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         private void UpdateStockQuantity(List<Item> itens)
