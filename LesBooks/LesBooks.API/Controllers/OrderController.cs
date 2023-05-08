@@ -54,24 +54,16 @@ namespace LesBooks.API.Controllers
             return StatusCode((int)HttpStatusCode.InternalServerError, response.erros);
         }
 
-        //[HttpGet]
-        //{
-        //    var response = await this._orderService.GetOrders();
+        [HttpGet]
+        public async Task<ActionResult<dynamic>> GetOrders()
+        {
+            var response = await this._orderService.GetOrders();
 
-        //    if (filter != null)
-        //    {
-        //        response.filter = filter;
-        //    } else
-        //    {
-        //        response.filter = null;
-        //    }
-
-
-        //    if (response.erros.Count == 0)
-        //    {
-        //        return StatusCode((int)HttpStatusCode.OK, response);
-        //    }
-        //    return StatusCode((int)HttpStatusCode.InternalServerError, response.erros);
-        //}
+            if (response.erros.Count == 0)
+            {
+                return StatusCode((int)HttpStatusCode.OK, response.orders);
+            }
+            return StatusCode((int)HttpStatusCode.InternalServerError, response.erros);
+        }
     }
 }
