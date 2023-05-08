@@ -10,6 +10,14 @@ namespace LesBooks.DAL.DAOs
 {
     public class PaymentDAO: Connection, IPaymentDAO
     {
+        ICardDAO cardDAO;
+
+        public PaymentDAO(ICardDAO cardDAO)
+        {
+
+            this.cardDAO = cardDAO;
+
+        }
         public Payment CreatePayment(Payment payment, int order_id)
         {
             try
@@ -36,6 +44,47 @@ namespace LesBooks.DAL.DAOs
                 CloseConnection();
             }
 
+        }
+
+        public List<Payment> GetAllPaymentsByOrderId(int orders_id)
+        {
+            List<Payment> payments = new List<Payment>();
+
+            try
+            {
+                string sql = "SELECT * FROM payment where orders_id = @orders_id";
+
+                OpenConnection();
+
+                cmd.Parameters.AddWithValue("@orders_id", orders_id);
+                cmd.CommandText = sql;
+                reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    Payment payment = new Payment();
+                    Order order = new Order();
+                    order.id = orders_id;
+
+                    payment.id = (int)reader["id"];
+                    payment.aprroved = Convert.ToBoolean(reader["approved"]);
+                    payment.value = Convert.ToDouble(reader["value"]);
+                    payment.card = cardDAO.GetCardById((int)reader["card_id"]);
+                    //payment.order = order;
+
+                    payments.Add(payment);
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                CloseConnection();
+            }
+
+            return payments;
         }
     }
 }

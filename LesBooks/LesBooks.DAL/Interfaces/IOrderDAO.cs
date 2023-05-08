@@ -7,10 +7,8 @@ using System.Threading.Tasks;
 
 namespace LesBooks.DAL.Interfaces
 {
-    public interface IItemDAO
+    public interface IOrderDAO
     {
-        public Item CreateItem(Item item, int order_id);
-
-        public List<Item> GetAllItensByOrderId(int orders_id);
+        public OrderPurchase GetOrderById(int order_id);
     }
 }

@@ -1,10 +1,13 @@
 ﻿using LesBooks.DAL.Interfaces;
 using LesBooks.Model.Entities;
+using LesBooks.Model.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Channels;
 using System.Threading.Tasks;
+using static System.Reflection.Metadata.BlobBuilder;
 
 namespace LesBooks.DAL.DAOs
 {
@@ -14,13 +17,15 @@ namespace LesBooks.DAL.DAOs
         IPaymentDAO paymentDAO;
         IAdressDAO adressDAO;
         ICouponDAO couponDAO;
+        IClientDAO clientDAO;
 
-        public OrderPurchaseDAO(IItemDAO itemDAO, IPaymentDAO paymentDAO, IAdressDAO adressDAO, ICouponDAO couponDAO)
+        public OrderPurchaseDAO(IItemDAO itemDAO, IPaymentDAO paymentDAO, IAdressDAO adressDAO, ICouponDAO couponDAO, IClientDAO clientDAO)
         {
             this.itemDAO = itemDAO;
             this.paymentDAO = paymentDAO;
             this.adressDAO = adressDAO;
             this.couponDAO = couponDAO;
+            this.clientDAO = clientDAO;
         }
 
         public OrderPurchase CreatePurchase(OrderPurchase purchase)
@@ -91,6 +96,58 @@ namespace LesBooks.DAL.DAOs
             {
                 CloseConnection();
             }
+        }
+
+        public List<OrderPurchase> GetOrderPurchases(int ?client_id)
+        {
+            List<OrderPurchase > purchases = new List<OrderPurchase>();
+
+            try
+            {
+                string sql = "SELECT * FROM orders ";
+                OpenConnection();
+
+                if (client_id != null)
+                {
+                    sql += "where client_id = @client_id";
+                    cmd.Parameters.AddWithValue("@client_id", client_id);
+                }
+
+                cmd.CommandText = sql;
+                reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    OrderPurchase orderPurchase = new OrderPurchase();
+
+                    //orderPurchase.dateOrder = Convert.ToDateTime(reader["publicationYear"]); NEED FIX
+
+                    orderPurchase.id = (int)(reader["id"]);
+                    orderPurchase.totalValue = Convert.ToDouble(reader["totalValue"]);
+                    orderPurchase.items = itemDAO.GetAllItensByOrderId((int)reader["id"]);
+                    orderPurchase.type = Model.Enums.TypeOrder.PURCHASE;
+                    orderPurchase.payments = paymentDAO.GetAllPaymentsByOrderId((int)reader["id"]);
+                    orderPurchase.coupons = couponDAO.GetAllCouponsByOrderId((int)reader["id"]);
+                    orderPurchase.adress = adressDAO.GetAdressById((int)reader["adress_id"]);
+                    orderPurchase.client = clientDAO.GetClientById((int)reader["client_id"]);
+                    orderPurchase.statusOrder = (Model.Enums.StatusOrder)Convert.ToInt32((int)reader["status_order_id"]);
+
+                    purchases.Add(orderPurchase);
+                }
+
+                reader.Close();
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                CloseConnection();
+            }
+
+            return purchases;
         }
     }
 }

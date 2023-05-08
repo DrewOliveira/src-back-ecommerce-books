@@ -11,5 +11,7 @@ namespace LesBooks.DAL.Interfaces
     public interface IOrderPurchaseDAO
     {
         public OrderPurchase CreatePurchase(OrderPurchase purchase);
+
+        public List<OrderPurchase> GetOrderPurchases(int ?client_id);
     }
 }

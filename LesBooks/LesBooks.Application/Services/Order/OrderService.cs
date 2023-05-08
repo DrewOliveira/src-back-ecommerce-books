@@ -24,7 +24,8 @@ namespace LesBooks.Application.Services
         IOrderPurchaseDAO _orderPurchaseDAO;
         IClientDAO _clientDAO;
         IStockDAO _stockDAO;
-        public OrderService(IBookDAO bookDAO, ICardDAO cardDAO, ICouponDAO couponDAO, IAdressDAO adressDAO, IOrderPurchaseDAO orderPurchaseDAO, IClientDAO clientDAO, IStockDAO stockDAO)
+        IOrderDAO _orderDAO;
+        public OrderService(IBookDAO bookDAO, ICardDAO cardDAO, ICouponDAO couponDAO, IAdressDAO adressDAO, IOrderPurchaseDAO orderPurchaseDAO, IClientDAO clientDAO, IStockDAO stockDAO, IOrderDAO orderDAO)
         {
             _bookDAO = bookDAO;
             _cardDAO = cardDAO;
@@ -33,6 +34,7 @@ namespace LesBooks.Application.Services
             _orderPurchaseDAO = orderPurchaseDAO;
             _clientDAO = clientDAO;
             _stockDAO = stockDAO;
+            _orderDAO = orderDAO;
         }
 
         public async Task<CreateOrderPurchaseResponse> CreateOrderPurchase(CreateOrderPurchaseRequest request)
@@ -215,6 +217,58 @@ namespace LesBooks.Application.Services
             {
                 throw ex;
             }
+        }
+        
+        public async Task<GetAllOrdersPurchaseByClientIdResponse> GetOrderPurchaseByClientId(int client_id)
+        {
+            GetAllOrdersPurchaseByClientIdResponse OrdersPurchaseResponse = new GetAllOrdersPurchaseByClientIdResponse();
+
+            try
+            {
+                OrdersPurchaseResponse.purchases = _orderPurchaseDAO.GetOrderPurchases(client_id);
+            }
+            catch (Exception err) 
+            {
+                OrdersPurchaseResponse.erros.Add(new Erro
+                {
+                    descricao = err.Message,
+                    detalhes = err
+                });
+            }
+
+            return OrdersPurchaseResponse;
+        }
+
+        public async Task<GetOrderByIdResponse> GetOrderById(int order_id)
+        {
+            GetOrderByIdResponse response = new GetOrderByIdResponse();
+            try
+            {
+                response.order_generic = _orderDAO.GetOrderById(order_id);
+            }
+            catch (Exception ex)
+            {
+                response.erros.Add(new Erro { descricao = ex.Message, detalhes = ex });
+
+            }
+
+            return response;
+        }
+
+        public async Task<GetOrdersResponse> GetOrders()
+        {
+            GetOrdersResponse response = new GetOrdersResponse();
+            try
+            {
+                response.orders = _orderPurchaseDAO.GetOrderPurchases(null);
+            }
+            catch (Exception ex)
+            {
+                response.erros.Add(new Erro { descricao = ex.Message, detalhes = ex });
+
+            }
+
+            return response;
         }
     }
 }

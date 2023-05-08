@@ -13,5 +13,11 @@ namespace LesBooks.Application.Services.Interfaces
     public interface IOrderService
     {
         public Task<CreateOrderPurchaseResponse> CreateOrderPurchase(CreateOrderPurchaseRequest request);
+
+        public Task<GetAllOrdersPurchaseByClientIdResponse> GetOrderPurchaseByClientId(int client_id);
+
+        public Task<GetOrderByIdResponse> GetOrderById(int client_id);
+
+        public Task<GetOrdersResponse> GetOrders();
     }
 }
