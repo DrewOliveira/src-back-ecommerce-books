@@ -86,6 +86,7 @@ namespace LesBooks.Application.Services.Client
                 adress.city = item.City;
                 adress.state = item.State;
                 adress.neighborhood = item.District;
+                adress.zipCode = item.ZipCode;
                 response.adress = adress;
             }
             
