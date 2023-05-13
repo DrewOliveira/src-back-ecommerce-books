@@ -78,6 +78,7 @@ namespace LesBooks.Application.Services
                 orderPurchase.statusOrder = StatusOrder.PROCESSING;
 
                 _orderPurchaseDAO.CreatePurchase(orderPurchase);
+                _orderDAO.CreateStatusHistory((int)orderPurchase.statusOrder,orderPurchase.id, 0);
 
             }
             catch (Exception ex)
@@ -278,12 +279,16 @@ namespace LesBooks.Application.Services
             ResponseBase response = new ResponseBase();
             try
             {
-                Order order = _orderPurchaseDAO.(request.OrderId);
+                Order order = _orderPurchaseDAO.GetOrderPurchases(request.OrderId).First();
                 StatusOrder newStatus = (StatusOrder)request.statusId;
                 if ((int)order.statusOrder >= (int)newStatus)
                 {
                     throw new Exception("Alteração de status não disponivél para o status encaminhado."); 
                 }
+
+
+
+                _orderDAO.CreateStatusHistory(request.statusId, request.OrderId, request.admId);
             }
             catch (Exception ex)
             {
@@ -332,7 +337,7 @@ namespace LesBooks.Application.Services
                 { "SC", 700 },
                 { "SE", 2100 },
                 { "TO", 1700 },
-                {"SP",500 }
+                { "SP", 500 }
             };
 
             // Verifica se o estado de destino existe na lista de distâncias

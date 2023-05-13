@@ -13,5 +13,6 @@ namespace LesBooks.DAL.Interfaces
         public OrderPurchase CreatePurchase(OrderPurchase purchase);
 
         public List<OrderPurchase> GetOrderPurchases(int ?client_id);
+        
     }
 }

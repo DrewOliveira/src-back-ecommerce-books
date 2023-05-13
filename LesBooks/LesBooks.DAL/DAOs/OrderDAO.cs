@@ -27,6 +27,24 @@ namespace LesBooks.DAL.DAOs
             this.couponDAO = couponDAO;
             this.clientDAO = clientDAO;
         }
+        public void UpdatestatusOrder(int idOrder,int idStatusOrder)
+        {
+            try
+            {
+                string query = "UPDATE order set id_status_order = @UpdateDate where id = @order_id ";
+                OpenConnection();
+
+                cmd.Parameters.AddWithValue("@idStatusOrder", idStatusOrder);
+                cmd.Parameters.AddWithValue("@id", idOrder);
+
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
         public void CreateStatusHistory(int idStatusOrder, int idOrder, int idUser)
         {
 
@@ -37,7 +55,7 @@ namespace LesBooks.DAL.DAOs
 
                 cmd.Parameters.AddWithValue("@idStatusOrder", idStatusOrder);
                 cmd.Parameters.AddWithValue("@idOrder", idOrder);
-                cmd.Parameters.AddWithValue("@idUser", idUser);
+                cmd.Parameters.AddWithValue("@idUser", idUser == 0 ? null : idUser);
                 cmd.Parameters.AddWithValue("@UpdateDate", DateTime.Now);
 
                 cmd.ExecuteNonQuery();
