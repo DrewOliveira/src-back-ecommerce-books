@@ -221,7 +221,6 @@ namespace LesBooks.Application.Services
                 throw ex;
             }
         }
-
         public async Task<GetAllOrdersPurchaseByClientIdResponse> GetOrderPurchaseByClientId(int client_id)
         {
             GetAllOrdersPurchaseByClientIdResponse OrdersPurchaseResponse = new GetAllOrdersPurchaseByClientIdResponse();

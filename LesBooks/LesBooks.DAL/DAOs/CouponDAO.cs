@@ -27,14 +27,7 @@ namespace LesBooks.DAL.DAOs
                     coupon.description = (string)reader["description"];
                     coupon.value = Convert.ToDouble(reader["value"]);
                     coupon.active = Convert.ToBoolean(reader["active"]);
-
-                    if ((int)reader["type_coupon_id"] == 1)
-                    {
-                        coupon.typeCoupon = TypeCoupon.PROMOTIONAL;
-                    } else
-                    {
-                        coupon.typeCoupon = TypeCoupon.REPLACEMENT;
-                    }
+                    coupon.typeCoupon = (Model.Enums.TypeCoupon)Convert.ToInt32(reader["type_coupon_id"]);
                 }
             }
             catch
@@ -58,6 +51,45 @@ namespace LesBooks.DAL.DAOs
                 OpenConnection();
 
                 cmd.Parameters.AddWithValue("@client_id", client_id);
+                cmd.CommandText = sql;
+                reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    Coupon coupon = new Coupon();
+
+                    coupon.id = (int)reader["id"];
+                    coupon.description = (string)reader["description"];
+                    coupon.value = Convert.ToDouble(reader["value"]);
+                    coupon.active = Convert.ToBoolean(reader["active"]);
+                    coupon.typeCoupon = (Model.Enums.TypeCoupon)Convert.ToInt32(reader["type_coupon_id"]);
+
+                    coupons.Add(coupon);
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                CloseConnection();
+            }
+
+            return coupons;
+        }
+
+        public List<Coupon> GetAllCouponsByOrderId(int orders_id)
+        {
+            List<Coupon> coupons = new List<Coupon>();
+
+            try
+            {
+                string sql = "SELECT * FROM coupon where orders_id = @orders_id";
+
+                OpenConnection();
+
+                cmd.Parameters.AddWithValue("@orders_id", orders_id);
                 cmd.CommandText = sql;
                 reader = cmd.ExecuteReader();
 

@@ -1,10 +1,13 @@
 ﻿using LesBooks.DAL.Interfaces;
 using LesBooks.Model.Entities;
+using LesBooks.Model.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Channels;
 using System.Threading.Tasks;
+using static System.Reflection.Metadata.BlobBuilder;
 
 namespace LesBooks.DAL.DAOs
 {
@@ -14,13 +17,15 @@ namespace LesBooks.DAL.DAOs
         IPaymentDAO paymentDAO;
         IAdressDAO adressDAO;
         ICouponDAO couponDAO;
+        IClientDAO clientDAO;
 
-        public OrderPurchaseDAO(IItemDAO itemDAO, IPaymentDAO paymentDAO, IAdressDAO adressDAO, ICouponDAO couponDAO)
+        public OrderPurchaseDAO(IItemDAO itemDAO, IPaymentDAO paymentDAO, IAdressDAO adressDAO, ICouponDAO couponDAO, IClientDAO clientDAO)
         {
             this.itemDAO = itemDAO;
             this.paymentDAO = paymentDAO;
             this.adressDAO = adressDAO;
             this.couponDAO = couponDAO;
+            this.clientDAO = clientDAO;
         }
         public void CreateStatusHistory(int idStatusOrder, int idOrder, int idUser)
         {

@@ -1,8 +1,11 @@
-﻿using LesBooks.Application.Requests;
+﻿using AngleSharp.Io;
+using LesBooks.Application.Requests;
 using LesBooks.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 using System.Net;
+using System.Runtime.InteropServices;
 
 namespace LesBooks.API.Controllers
 {
