@@ -23,7 +23,7 @@ namespace LesBooks.API.Controllers
         public async Task<ActionResult<dynamic>> Post([FromBody] CreateOrderPurchaseRequest request)
         {
             var response = await this._orderService.CreateOrderPurchase(request);
-            if (response.erros.Count == 0)
+            if (response.erros == null)
             {
                 return StatusCode((int)HttpStatusCode.OK);
             }
@@ -35,7 +35,7 @@ namespace LesBooks.API.Controllers
         {
             
             var response = await _orderService.PatchOrder(request);
-            if (response.erros.Count == 0)
+            if (response.erros == null)
             {
                 return StatusCode((int)HttpStatusCode.OK);
             }
@@ -47,7 +47,7 @@ namespace LesBooks.API.Controllers
         {
             var response = await this._orderService.GetOrderPurchaseByClientId(id);
 
-            if (response.erros.Count == 0)
+            if (response.erros == null)
             {
                 return StatusCode((int)HttpStatusCode.OK, response.purchases);
             }
@@ -70,7 +70,7 @@ namespace LesBooks.API.Controllers
         {
             var response = await this._orderService.GetOrderById(id);
 
-            if (response.erros.Count == 0)
+            if (response.erros == null)
             {
                 return StatusCode((int)HttpStatusCode.OK, response.order_generic);
             }
@@ -82,7 +82,7 @@ namespace LesBooks.API.Controllers
         {
             var response = await this._orderService.GetOrders();
 
-            if (response.erros.Count == 0)
+            if (response.erros == null)
             {
                 return StatusCode((int)HttpStatusCode.OK, response.orders);
             }

@@ -34,7 +34,7 @@ namespace LesBooks.Application.Services
             }
             catch (Exception ex)
             {
-                response.erros.Add(new Erro { descricao = ex.Message, detalhes = ex });
+                response.erros = new Erro { descricao = ex.Message, detalhes = ex };
 
             }
             return response;
@@ -79,7 +79,7 @@ namespace LesBooks.Application.Services
             }
             catch (Exception ex)
             {
-                response.erros.Add(new Erro { descricao = ex.Message, detalhes = ex });
+                response.erros = new Erro { descricao = ex.Message, detalhes = ex };
 
             }
             return response;

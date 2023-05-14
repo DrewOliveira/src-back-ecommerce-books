@@ -1,4 +1,5 @@
-﻿using LesBooks.Application.Responses;
+﻿using LesBooks.Application.Requests.Stock;
+using LesBooks.Application.Responses;
 using LesBooks.Application.Services.Interfaces;
 using LesBooks.DAL;
 using LesBooks.DAL.Interfaces;
@@ -20,22 +21,20 @@ namespace LesBooks.Application.Services
             _stockDAO = stockDAO;
             _stockRedis = stockRedis;
         }
-        public async Task<ResponseBase> CreateTemporaryBlock(string clientId, string bookId, int quantity)
+        public async Task<CreateLockResponse> CreateTemporaryBlock(CreateLockRequest request)
         {
-            ResponseBase responseBase  =  new ResponseBase();
+            CreateLockResponse responseBase  =  new CreateLockResponse();
             try
             {
-                _stockRedis.CreateTemporaryBlock(clientId, bookId, quantity, 2);    
+               responseBase.expireTime = _stockRedis.CreateTemporaryBlock(request.idClient.ToString(),request.idBooks.ToString(), request.quantity, 2);    
 
             }catch(Exception ex)
             {
-                responseBase.erros = new List<Erro>()
-                {
-                    new Erro()
+                responseBase.erros = new  Erro()
                     {
                         descricao = ex.Message,
                         detalhes = ex
-                    }
+                    
                 };
             }
             return responseBase;
@@ -62,11 +61,11 @@ namespace LesBooks.Application.Services
             }
             catch (Exception err)
             {
-                validateStockByBookIdResponse.erros.Add(new Erro
+                validateStockByBookIdResponse.erros = new Erro
                 {
                     descricao = err.Message,
                     detalhes = err
-                });
+                };
             }
 
             return validateStockByBookIdResponse;

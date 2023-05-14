@@ -27,11 +27,11 @@ namespace LesBooks.Application.Services
             }
             catch (Exception err)
             {
-                getBookResponse.erros.Add(new Erro
+                getBookResponse.erros = new Erro
                 {
                     descricao = err.Message,
                     detalhes = err
-                });
+                };
             }
 
             return getBookResponse;
@@ -47,11 +47,11 @@ namespace LesBooks.Application.Services
             }
             catch (Exception err)
             {
-                getAllBookResponse.erros.Add(new Erro
+                getAllBookResponse.erros = new Erro
                 {
                     descricao = err.Message,
                     detalhes = err
-                });
+                };
             }
 
             return getAllBookResponse;

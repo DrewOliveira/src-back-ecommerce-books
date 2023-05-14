@@ -46,13 +46,12 @@ namespace LesBooks.Application.Services.Client
             }
             catch(Exception ex)
             {
-                response.erros = new List<Erro>()
-                {
+                response.erros = 
                     new Erro()
                     {
                         descricao = ex.Message,
                         detalhes = ex
-                    }
+                    
                 };
             }
             return response;
@@ -127,13 +126,12 @@ namespace LesBooks.Application.Services.Client
             }
             catch (Exception ex)
             {
-                response.erros = new List<Erro>()
-                {
+                response.erros=
                     new Erro()
                     {
                         descricao = ex.Message,
                         detalhes = ex
-                    }
+                    
                 };
             }
             return response;

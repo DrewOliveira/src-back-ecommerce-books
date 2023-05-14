@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,12 +15,12 @@ namespace LesBooks.DAL
         private TimeSpan timeBlockSpan { get; set; }
         private void intitKeys(string clientId, string bookId)
         {
-            bookKey = $"estoque:{bookId}";
+            bookKey = $"bloqueio:*:{bookId}";
             blockKey = $"bloqueio:{clientId}:{bookId}";
             clientKey = $"bloqueio:{clientId}:*";
         }
 
-        public void CreateTemporaryBlock(string clientId, string bookId, int quantity, int timeBlock)
+        public DateTime CreateTemporaryBlock(string clientId, string bookId, int quantity, int timeBlock)
         {
             intitKeys(clientId, bookId);
             TimeSpan timeBlockSpan = TimeSpan.FromMinutes(timeBlock);
@@ -27,20 +28,19 @@ namespace LesBooks.DAL
 
             if (db.KeyExists(blockKey))
             {
-                IncrementTemporaryBlock(clientId, bookId, quantity, timeBlock);
+                IncrementTemporaryBlock(quantity);
             }
             else
             {
                 db.StringSet(blockKey, quantity);
             }
             setExpireClientBlocks(timeBlock);
-
+            return DateTime.Now.AddMinutes(timeBlock);
 
         }
-        public void IncrementTemporaryBlock(string clientId, string bookId, int quantity, int timeBlock)
+        public void IncrementTemporaryBlock(int quantity)
         {
-            intitKeys(clientId, bookId);
-            TimeSpan timeBlockSpan = TimeSpan.FromMinutes(timeBlock);
+          
             db.StringIncrement(blockKey, quantity);
         }
 
@@ -60,7 +60,7 @@ namespace LesBooks.DAL
                     {
                         transaction.KeyExpireAsync(key, TimeSpan.FromMinutes(timeBlock));
                     }
-
+                    
                     transaction.Execute();
                 }
             }
@@ -69,17 +69,26 @@ namespace LesBooks.DAL
         }
         public int getTemporaryBlockbyBook(string bookId)
         {
-            blockKey = $"bloqueio:*:{bookId}";
-            var blockedBooks = db.Multiplexer.GetServer(server)
-                                            .Keys(pattern: blockKey)
-                                            .ToArray();
+
+            var endpoints = db.Multiplexer.GetEndPoints();
             int quantity = 0;
- 
-            foreach(var blockedBook in blockedBooks)
+
+            foreach (var endpoint in endpoints)
             {
-                quantity += Convert.ToInt32(db.StringGet(blockedBook));
+                var server = db.Multiplexer.GetServer(endpoint);
+                var keys = server.Keys(pattern: bookKey);
+                
+                foreach (var chave in keys)
+                {
+                    var transaction = db.CreateTransaction();
+                    foreach (var key in keys)
+                    {
+                        quantity += Convert.ToInt32(db.StringGet(key));
+                    }
+
+                    transaction.Execute();
+                }
             }
-            
             return quantity;
         }
     }

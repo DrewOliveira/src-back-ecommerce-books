@@ -1,4 +1,5 @@
 ﻿using LesBooks.Application.Requests;
+using LesBooks.Application.Requests.Stock;
 using LesBooks.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,13 +17,13 @@ namespace LesBooks.API.Controllers
             this.stockService = stockService;   
         }
         [HttpPost("lock/")]
-        public async Task<ActionResult<dynamic>> lockStock(string clientId, string bookId,int quantity)
+        public async Task<ActionResult<dynamic>> lockStock([FromBody] CreateLockRequest request)
         {
-            var response = await this.stockService.CreateTemporaryBlock(clientId, bookId, quantity);
+            var response = await this.stockService.CreateTemporaryBlock(request);
 
-            if (response.erros.Count == 0)
+            if (response.erros == null)
             {
-                return StatusCode((int)HttpStatusCode.OK);
+                return StatusCode((int)HttpStatusCode.OK,response.expireTime);
             }
             return StatusCode((int)HttpStatusCode.InternalServerError, response.erros);
         }

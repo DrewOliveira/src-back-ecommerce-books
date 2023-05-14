@@ -8,8 +8,7 @@ namespace LesBooks.DAL
 {
     public interface IStockRedis
     {
-        public void CreateTemporaryBlock(string clientId, string bookId, int quantity, int timeBlock);
-        public void IncrementTemporaryBlock(string clientId, string bookId, int quantity, int timeBlock);
+        public DateTime CreateTemporaryBlock(string clientId, string bookId, int quantity, int timeBlock);
         public int getTemporaryBlockbyBook(string bookId);
     }
 }

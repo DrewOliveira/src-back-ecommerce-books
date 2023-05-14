@@ -22,7 +22,7 @@ namespace LesBooks.API.Controllers
         {
             var response = await this._adressService.ListAdresses(id);
 
-            if (response.erros.Count == 0)
+            if (response.erros == null)
             {
                 return StatusCode((int)HttpStatusCode.OK, response.adress);
             }
@@ -33,7 +33,7 @@ namespace LesBooks.API.Controllers
         {
             var response = await this._adressService.GetAdress(id);
 
-            if (response.erros.Count == 0)
+            if (response.erros == null)
             {
                 return StatusCode((int)HttpStatusCode.OK, response.adress);
             }
@@ -46,7 +46,7 @@ namespace LesBooks.API.Controllers
         {
             var response = await this._adressService.GetAdressByCep(cep);
 
-            if (response.erros.Count == 0)
+            if (response.erros == null)
             {
                 if (response.adress == null)
                     return StatusCode((int)HttpStatusCode.NoContent);
@@ -60,7 +60,7 @@ namespace LesBooks.API.Controllers
         public async Task<ActionResult<dynamic>> Post([FromBody] CreateAdressRequest request)
         {
             var response = await this._adressService.CreateAdress(request);
-            if (response.erros.Count == 0)
+            if (response.erros == null)
             {
                 return StatusCode((int)HttpStatusCode.OK);
             }
@@ -71,7 +71,7 @@ namespace LesBooks.API.Controllers
         public async Task<ActionResult<dynamic>> Put([FromBody] UpdateAdressRequest request)
         {
             var response = await this._adressService.UpdateAdress(request);
-            if (response.erros.Count == 0)
+            if (response.erros == null)
             {
                 return StatusCode((int)HttpStatusCode.OK);
             }
@@ -82,7 +82,7 @@ namespace LesBooks.API.Controllers
         public async Task<ActionResult<dynamic>> Delete(int id)
         {
             var response = await this._adressService.DeleteAdress(id);
-            if (response.erros.Count == 0)
+            if (response.erros == null)
             {
                 return StatusCode((int)HttpStatusCode.OK);
             }
