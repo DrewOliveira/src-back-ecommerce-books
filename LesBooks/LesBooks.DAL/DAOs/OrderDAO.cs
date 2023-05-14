@@ -33,7 +33,7 @@ namespace LesBooks.DAL.DAOs
             {
                 string query = "UPDATE order set id_status_order = @UpdateDate where id = @order_id ";
                 OpenConnection();
-
+                cmd.CommandText = query;
                 cmd.Parameters.AddWithValue("@idStatusOrder", idStatusOrder);
                 cmd.Parameters.AddWithValue("@id", idOrder);
 
@@ -52,10 +52,10 @@ namespace LesBooks.DAL.DAOs
             {
                 string query = "INSERT INTO orderStatusHistory (id_status_order, id_order, id_user,UpdateDate) VALUES (@idStatusOrder, @idOrder, @idUser,@UpdateDate)";
                 OpenConnection();
-
+                cmd.CommandText = query;
                 cmd.Parameters.AddWithValue("@idStatusOrder", idStatusOrder);
                 cmd.Parameters.AddWithValue("@idOrder", idOrder);
-                cmd.Parameters.AddWithValue("@idUser", idUser == 0 ? null : idUser);
+                cmd.Parameters.AddWithValue("@idUser", idUser == 0 ? (object)DBNull.Value : idUser);
                 cmd.Parameters.AddWithValue("@UpdateDate", DateTime.Now);
 
                 cmd.ExecuteNonQuery();
@@ -96,7 +96,7 @@ namespace LesBooks.DAL.DAOs
                     orderGeneric.adress = adressDAO.GetAdressById((int)reader["adress_id"]);
                     orderGeneric.client = clientDAO.GetClientById((int)reader["client_id"]);
                     orderGeneric.statusOrder = (Model.Enums.StatusOrder)Convert.ToInt32((int)reader["status_order_id"]);
-                    orderGeneric.dateOrder = Convert.ToDateTime(reader["dateOrder"].ToString());
+                    //orderGeneric.dateOrder = Convert.ToDateTime(reader["dateOrder"].ToString());
                 }
 
                 reader.Close();

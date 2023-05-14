@@ -279,16 +279,15 @@ namespace LesBooks.Application.Services
             ResponseBase response = new ResponseBase();
             try
             {
-                Order order = _orderPurchaseDAO.GetOrderPurchases(request.OrderId).First();
+                Order order = _orderDAO.GetOrderById(request.OrderId);
                 StatusOrder newStatus = (StatusOrder)request.statusId;
                 if ((int)order.statusOrder >= (int)newStatus)
                 {
                     throw new Exception("Alteração de status não disponivél para o status encaminhado."); 
                 }
-
-
-
+                _orderPurchaseDAO.UpdateStatusOrder(request.OrderId, request.statusId);
                 _orderDAO.CreateStatusHistory(request.statusId, request.OrderId, request.admId);
+
             }
             catch (Exception ex)
             {

@@ -48,6 +48,25 @@ namespace LesBooks.DAL.DAOs
                 throw;
             }
         }
+        public void UpdateStatusOrder(int idOrder,int statusOrder)
+        {
+            try
+            {
+                string query = "UPDATE orders SET  status_order_id = @status_order_id WHERE id = @order_id ";
+                OpenConnection();
+                cmd.CommandText = query;
+                cmd.Parameters.AddWithValue("@status_order_id", statusOrder);
+                cmd.Parameters.AddWithValue("@order_id", idOrder);
+
+
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
 
         public OrderPurchase CreatePurchase(OrderPurchase purchase)
         {

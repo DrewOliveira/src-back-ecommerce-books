@@ -42,12 +42,14 @@ namespace LesBooks.IoC
             services.AddScoped<IStockEntryHistoryDAO, StockEntryHistoryDAO>();
             services.AddScoped<IActivationStatusReasonDAO, ActivationStatusReasonDAO>();
             services.AddScoped<ICategoryStatusReasonDAO, CategoryStatusReasonDAO>();
-
             services.AddScoped<ICouponDAO, CouponDAO>();
             services.AddScoped<IPaymentDAO, PaymentDAO>();
             services.AddScoped<IItemDAO, ItemDAO>();
             services.AddScoped<IOrderPurchaseDAO, OrderPurchaseDAO>();
             services.AddScoped<IOrderDAO, OrderDAO>();
+
+            //Redis
+            services.AddScoped<IStockRedis,StockRedis>();
 
             return services;
         }

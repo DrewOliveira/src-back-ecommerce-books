@@ -2,17 +2,22 @@
 using System;
 using System.Threading.Tasks;
 
-namespace ReferenceConsoleRedisApp
+namespace LesBooks.DAL
 {
-    class Program
+    public abstract class RedisConnection
     {
-        static readonly ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("redis-15814.c240.us-east-1-3.ec2.cloud.redislabs.com:15814,password=HAoZJeJ3vBYklkt0opVqnNgRD8gkk3kU");
-        static async Task Main(string[] args)
+        protected static ConnectionMultiplexer redis;
+        protected IDatabase db;
+        protected string server;
+        public RedisConnection()
         {
-            var db = redis.GetDatabase();
-            var batch = db.CreateBatch();
+            server = "redis-15632.c11.us-east-1-3.ec2.cloud.redislabs.com:15632,password=123";
+            redis = ConnectionMultiplexer.Connect(server);
+            db = redis.GetDatabase();
             
-            batch.Execute();
         }
+        
+
+
     }
 }
