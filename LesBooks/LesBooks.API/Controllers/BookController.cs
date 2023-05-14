@@ -1,4 +1,5 @@
-﻿using LesBooks.Application.Services.Interfaces;
+﻿using LesBooks.Application;
+using LesBooks.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
@@ -24,7 +25,7 @@ namespace LesBooks.API.Controllers
         {
             var response = await this._bookService.GetAllBooks();
 
-            if (response.erros.Count == 0)
+            if (response.erros == null)
             {
                 return StatusCode((int)HttpStatusCode.OK, response.books);
             }
@@ -35,7 +36,7 @@ namespace LesBooks.API.Controllers
         {
             var response = await this._bookService.GetBook(id);
 
-            if (response.erros.Count == 0)
+            if (response.erros == null)
             {
                 return StatusCode((int)HttpStatusCode.OK, response.book);
             }
@@ -47,7 +48,7 @@ namespace LesBooks.API.Controllers
         {
             var response = await this._stockService.ValidateStockByBookId(id, quantity);
 
-            if (response.erros.Count == 0)
+            if (response.erros == null)
             {
                 return StatusCode((int)HttpStatusCode.OK, new { response.quantity, response.validate });
             }

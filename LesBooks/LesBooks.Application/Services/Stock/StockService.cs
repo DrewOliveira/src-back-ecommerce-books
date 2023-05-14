@@ -29,13 +29,11 @@ namespace LesBooks.Application.Services
 
             }catch(Exception ex)
             {
-                responseBase.erros = new List<Erro>()
-                {
-                    new Erro()
+                responseBase.erros = new  Erro()
                     {
                         descricao = ex.Message,
                         detalhes = ex
-                    }
+                    
                 };
             }
             return responseBase;
@@ -62,11 +60,11 @@ namespace LesBooks.Application.Services
             }
             catch (Exception err)
             {
-                validateStockByBookIdResponse.erros.Add(new Erro
+                validateStockByBookIdResponse.erros = new Erro
                 {
                     descricao = err.Message,
                     detalhes = err
-                });
+                };
             }
 
             return validateStockByBookIdResponse;

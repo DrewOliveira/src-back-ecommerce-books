@@ -8,6 +8,6 @@ namespace LesBooks.Application.Responses
 {
     public class ResponseBase
     {
-        public List<Erro> erros = new List<Erro>();
+        public Erro erros;
     }
 }

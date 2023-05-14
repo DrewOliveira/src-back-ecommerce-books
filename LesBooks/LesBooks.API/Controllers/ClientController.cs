@@ -26,7 +26,7 @@ namespace LesBooks.API.Controllers
         {
             var response = await this._clientService.ListClientes();
 
-            if (response.erros.Count == 0)
+            if (response.erros == null)
             {
                 return StatusCode((int)HttpStatusCode.OK, response.clients );
             }
@@ -39,7 +39,7 @@ namespace LesBooks.API.Controllers
         {
             var response = await this._clientService.GetCliente(id);
            
-            if (response.erros.Count == 0)
+            if (response.erros == null)
             {
                 return StatusCode((int)HttpStatusCode.OK, response.client);
             }
@@ -51,7 +51,7 @@ namespace LesBooks.API.Controllers
         public async Task<ActionResult<dynamic>> Post([FromBody] CreateClientRequest request)
         {
             var response = await this._clientService.CreateClient(request);
-            if (response.erros.Count == 0)
+            if (response.erros == null)
             {
                 return StatusCode((int)HttpStatusCode.OK);
             }
@@ -61,7 +61,7 @@ namespace LesBooks.API.Controllers
         public async Task<ActionResult<dynamic>> ChangePassword([FromBody] ChangePasswordClientRequest request)
         {
             var response = await this._clientService.ChangePassword(request);
-            if (response.erros.Count == 0)
+            if (response.erros == null)
             {
                 return StatusCode((int)HttpStatusCode.OK);
             }
@@ -72,7 +72,7 @@ namespace LesBooks.API.Controllers
         public async Task<ActionResult<dynamic>> Put([FromBody] UpdateClientRequest request)
         {
             var response = await this._clientService.UpdateClient(request);
-            if (response.erros.Count == 0)
+            if (response.erros == null)
             {
                 return StatusCode((int)HttpStatusCode.OK);
             }
@@ -83,7 +83,7 @@ namespace LesBooks.API.Controllers
         public async Task<ActionResult<dynamic>> Delete(int id)
         {
             var response = await this._clientService.DeleteClient(id);
-            if (response.erros.Count == 0)
+            if (response.erros == null)
             {
                 return StatusCode((int)HttpStatusCode.OK);
             }

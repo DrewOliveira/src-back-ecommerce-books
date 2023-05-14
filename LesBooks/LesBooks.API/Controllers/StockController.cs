@@ -20,7 +20,7 @@ namespace LesBooks.API.Controllers
         {
             var response = await this.stockService.CreateTemporaryBlock(clientId, bookId, quantity);
 
-            if (response.erros.Count == 0)
+            if (response.erros == null)
             {
                 return StatusCode((int)HttpStatusCode.OK);
             }

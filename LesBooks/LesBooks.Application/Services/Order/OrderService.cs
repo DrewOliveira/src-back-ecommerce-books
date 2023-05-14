@@ -56,12 +56,12 @@ namespace LesBooks.Application.Services
 
                 if (!this.CheckoutQuantityStock(itens))
                 {
-                    response.erros.Add(new Erro
+                    response.erros = new Erro
                     {
                         descricao = "Quantity not possible for itens this purchase",
                         detalhes = new Exception("Stock Limit"),
                         cod = "404"
-                    });
+                    };
 
                     return response;
                 }
@@ -86,7 +86,7 @@ namespace LesBooks.Application.Services
             }
             catch (Exception ex)
             {
-                response.erros.Add(new Erro { descricao = ex.Message, detalhes = ex });
+                response.erros = new Erro { descricao = ex.Message, detalhes = ex };
             }
 
             try
@@ -95,7 +95,7 @@ namespace LesBooks.Application.Services
             }
             catch (Exception ex)
             {
-                response.erros.Add(new Erro { descricao = ex.Message, detalhes = ex });
+                response.erros = new Erro { descricao = ex.Message, detalhes = ex };
             }
 
             return response;
@@ -235,11 +235,11 @@ namespace LesBooks.Application.Services
             }
             catch (Exception err)
             {
-                OrdersPurchaseResponse.erros.Add(new Erro
+                OrdersPurchaseResponse.erros = new Erro
                 {
                     descricao = err.Message,
                     detalhes = err
-                });
+                };
             }
 
             return OrdersPurchaseResponse;
@@ -254,7 +254,7 @@ namespace LesBooks.Application.Services
             }
             catch (Exception ex)
             {
-                response.erros.Add(new Erro { descricao = ex.Message, detalhes = ex });
+                response.erros = new Erro { descricao = ex.Message, detalhes = ex };
 
             }
 
@@ -270,7 +270,7 @@ namespace LesBooks.Application.Services
             }
             catch (Exception ex)
             {
-                response.erros.Add(new Erro { descricao = ex.Message, detalhes = ex });
+                response.erros = new Erro { descricao = ex.Message, detalhes = ex };
 
             }
 
@@ -294,12 +294,11 @@ namespace LesBooks.Application.Services
             }
             catch (Exception ex)
             {
-                response.erros = new List<Erro>
-                {
+                response.erros = 
                     new Erro(){
                         descricao = ex.Message,
                         detalhes = ex
-                    }
+                    
                 };
             }
             return response;
