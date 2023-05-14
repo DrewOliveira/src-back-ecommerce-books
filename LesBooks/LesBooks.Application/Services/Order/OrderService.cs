@@ -26,7 +26,8 @@ namespace LesBooks.Application.Services
         IStockDAO _stockDAO;
         IOrderDAO _orderDAO;
         IAdressService _adressService;
-        public OrderService(IBookDAO bookDAO, ICardDAO cardDAO, ICouponDAO couponDAO, IAdressDAO adressDAO, IOrderPurchaseDAO orderPurchaseDAO, IClientDAO clientDAO, IStockDAO stockDAO, IOrderDAO orderDAO, IAdressService adressService)
+        IOrderHistoryStatusDAO _orderHistoryStatusDAO;
+        public OrderService(IBookDAO bookDAO, ICardDAO cardDAO, ICouponDAO couponDAO, IAdressDAO adressDAO, IOrderPurchaseDAO orderPurchaseDAO, IClientDAO clientDAO, IStockDAO stockDAO, IOrderDAO orderDAO, IAdressService adressService,IOrderHistoryStatusDAO orderHistoryStatusDAO)
         {
             _bookDAO = bookDAO;
             _cardDAO = cardDAO;
@@ -37,6 +38,8 @@ namespace LesBooks.Application.Services
             _stockDAO = stockDAO;
             _orderDAO = orderDAO;
             _adressService = adressService;
+            _orderHistoryStatusDAO = orderHistoryStatusDAO;
+
         }
 
         public async Task<CreateOrderPurchaseResponse> CreateOrderPurchase(CreateOrderPurchaseRequest request)
@@ -78,7 +81,7 @@ namespace LesBooks.Application.Services
                 orderPurchase.statusOrder = StatusOrder.PROCESSING;
 
                 _orderPurchaseDAO.CreatePurchase(orderPurchase);
-                _orderDAO.CreateStatusHistory((int)orderPurchase.statusOrder,orderPurchase.id, 0);
+                _orderHistoryStatusDAO.CreateStatusHistory((int)orderPurchase.statusOrder,orderPurchase.id, 0);
 
             }
             catch (Exception ex)
@@ -286,7 +289,7 @@ namespace LesBooks.Application.Services
                     throw new Exception("Alteração de status não disponivél para o status encaminhado."); 
                 }
                 _orderPurchaseDAO.UpdateStatusOrder(request.OrderId, request.statusId);
-                _orderDAO.CreateStatusHistory(request.statusId, request.OrderId, request.admId);
+                _orderHistoryStatusDAO.CreateStatusHistory(request.statusId, request.OrderId, request.admId);
 
             }
             catch (Exception ex)

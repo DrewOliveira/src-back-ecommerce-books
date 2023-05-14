@@ -18,14 +18,16 @@ namespace LesBooks.DAL.DAOs
         IAdressDAO adressDAO;
         ICouponDAO couponDAO;
         IClientDAO clientDAO;
+        IOrderHistoryStatusDAO orderHistoryStatusDAO;
 
-        public OrderDAO(IItemDAO itemDAO, IPaymentDAO paymentDAO, IAdressDAO adressDAO, ICouponDAO couponDAO, IClientDAO clientDAO)
+        public OrderDAO(IItemDAO itemDAO, IPaymentDAO paymentDAO, IAdressDAO adressDAO, ICouponDAO couponDAO, IClientDAO clientDAO, IOrderHistoryStatusDAO orderHistoryStatusDAO)
         {
             this.itemDAO = itemDAO;
             this.paymentDAO = paymentDAO;
             this.adressDAO = adressDAO;
             this.couponDAO = couponDAO;
             this.clientDAO = clientDAO;
+            this.orderHistoryStatusDAO = orderHistoryStatusDAO;
         }
         public void UpdatestatusOrder(int idOrder,int idStatusOrder)
         {
@@ -45,30 +47,9 @@ namespace LesBooks.DAL.DAOs
                 throw;
             }
         }
-        public void CreateStatusHistory(int idStatusOrder, int idOrder, int idUser)
-        {
-
-            try
-            {
-                string query = "INSERT INTO orderStatusHistory (id_status_order, id_order, id_user,UpdateDate) VALUES (@idStatusOrder, @idOrder, @idUser,@UpdateDate)";
-                OpenConnection();
-                cmd.CommandText = query;
-                cmd.Parameters.AddWithValue("@idStatusOrder", idStatusOrder);
-                cmd.Parameters.AddWithValue("@idOrder", idOrder);
-                cmd.Parameters.AddWithValue("@idUser", idUser == 0 ? (object)DBNull.Value : idUser);
-                cmd.Parameters.AddWithValue("@UpdateDate", DateTime.Now);
-
-                cmd.ExecuteNonQuery();
-            }
-            catch (Exception ex)
-            {
-
-                throw;
-            }
-        }
        
 
-    public OrderPurchase GetOrderById(int order_id)
+        public OrderPurchase GetOrderById(int order_id)
         {
             OrderPurchase orderGeneric = null;
 
@@ -96,6 +77,7 @@ namespace LesBooks.DAL.DAOs
                     orderGeneric.adress = adressDAO.GetAdressById((int)reader["adress_id"]);
                     orderGeneric.client = clientDAO.GetClientById((int)reader["client_id"]);
                     orderGeneric.statusOrder = (Model.Enums.StatusOrder)Convert.ToInt32((int)reader["status_order_id"]);
+                    orderGeneric.history = orderHistoryStatusDAO.getHistoryOrder(orderGeneric.id);
                     //orderGeneric.dateOrder = Convert.ToDateTime(reader["dateOrder"].ToString());
                 }
 

@@ -10,6 +10,6 @@ namespace LesBooks.DAL.Interfaces
     public interface IOrderDAO
     {
         public OrderPurchase GetOrderById(int order_id);
-        public void CreateStatusHistory(int idStatusOrder, int idOrder, int idUser);
+     
     }
 }

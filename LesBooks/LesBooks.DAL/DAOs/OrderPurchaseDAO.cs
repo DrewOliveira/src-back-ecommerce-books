@@ -138,7 +138,7 @@ namespace LesBooks.DAL.DAOs
                 CloseConnection();
             }
         }
-
+       
         public List<OrderPurchase> GetOrderPurchases(int ?client_id)
         {
             List<OrderPurchase > purchases = new List<OrderPurchase>();

@@ -22,5 +22,6 @@ namespace LesBooks.Model.Entities
         public StatusOrder statusOrder { get; set; }
 
         public Client client { get; set; }
+        public List<OrderStatusHistory> history { get; set; }
     }
 }
