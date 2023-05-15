@@ -172,7 +172,9 @@ namespace LesBooks.DAL.DAOs
                     orderPurchase.adress = adressDAO.GetAdressById((int)reader["adress_id"]);
                     orderPurchase.client = clientDAO.GetClientById((int)reader["client_id"]);
                     orderPurchase.statusOrder = (Model.Enums.StatusOrder)Convert.ToInt32((int)reader["status_order_id"]);
-                    orderPurchase.dateOrder = Convert.ToDateTime(reader["dateOrder"].ToString());
+                    string data = reader["dateOrder"].ToString();
+                    if(!String.IsNullOrEmpty(data))
+                    orderPurchase.dateOrder = Convert.ToDateTime(data);
                     purchases.Add(orderPurchase);
                 }
 

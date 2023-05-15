@@ -78,7 +78,9 @@ namespace LesBooks.DAL.DAOs
                     orderGeneric.client = clientDAO.GetClientById((int)reader["client_id"]);
                     orderGeneric.statusOrder = (Model.Enums.StatusOrder)Convert.ToInt32((int)reader["status_order_id"]);
                     orderGeneric.history = orderHistoryStatusDAO.getHistoryOrder(orderGeneric.id);
-                    orderGeneric.dateOrder = Convert.ToDateTime(reader["dateOrder"].ToString());
+                    string data = reader["dateOrder"].ToString();
+                    if (!String.IsNullOrEmpty(data))
+                    orderGeneric.dateOrder = Convert.ToDateTime(data);
                 }
 
                 reader.Close();
