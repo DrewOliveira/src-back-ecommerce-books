@@ -346,7 +346,7 @@ namespace LesBooks.Application.Services
             if (distancias.ContainsKey(state))
             {
                 int distancia = distancias[state];
-                decimal valorFrete = distancia * 0.05m; // Exemplo: Valor fixo de R$ 0,05 por km
+                double valorFrete = distancia * 0.05; // Exemplo: Valor fixo de R$ 0,05 por km
 
                 return valorFrete;
             }

@@ -19,7 +19,7 @@ namespace LesBooks.Application.Services.Interfaces
         public Task<GetOrderByIdResponse> GetOrderById(int client_id);
 
         public Task<GetOrdersResponse> GetOrders();
-        public decimal DeliveryPrice(string cep);
+        public double DeliveryPrice(string cep);
         public Task<ResponseBase> PatchOrder(PatchOrderRequest request);
     }
 }
