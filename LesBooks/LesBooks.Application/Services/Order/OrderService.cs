@@ -79,6 +79,7 @@ namespace LesBooks.Application.Services
                 orderPurchase.adress = _adressDAO.GetAdressById(request.adress_delivery_id);
                 orderPurchase.client = _clientDAO.GetClientById(request.client_id);
                 orderPurchase.statusOrder = StatusOrder.PROCESSING;
+                orderPurchase.totalValue += DeliveryPrice(orderPurchase.adress.zipCode);
 
                 _orderPurchaseDAO.CreatePurchase(orderPurchase);
                 _orderHistoryStatusDAO.CreateStatusHistory((int)orderPurchase.statusOrder,orderPurchase.id, 0);
@@ -306,7 +307,7 @@ namespace LesBooks.Application.Services
         
         
  
-        public decimal DeliveryPrice(string zipcode)
+        public double DeliveryPrice(string zipcode)
         {
             string state =  _adressService.GetAdressByCep(zipcode).Result.adress.state;
             // Distâncias em km entre São Paulo e os demais estados brasileiros

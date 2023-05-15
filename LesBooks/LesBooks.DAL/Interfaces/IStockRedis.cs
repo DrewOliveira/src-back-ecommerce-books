@@ -10,5 +10,6 @@ namespace LesBooks.DAL
     {
         public DateTime CreateTemporaryBlock(string clientId, string bookId, int quantity, int timeBlock);
         public int getTemporaryBlockbyBook(string bookId);
+        public void freeTemporaryBlock(string clientId);
     }
 }

@@ -91,5 +91,24 @@ namespace LesBooks.DAL
             }
             return quantity;
         }
+        public void freeTemporaryBlock(string clientId)
+        {
+            this.clientKey = $"bloqueio:{clientId}:*";
+            var endpoints = db.Multiplexer.GetEndPoints();
+
+
+            foreach (var endpoint in endpoints)
+            {
+                var server = db.Multiplexer.GetServer(endpoint);
+                var keys = server.Keys(pattern: clientKey);
+                foreach (var chave in keys)
+                {
+                    foreach (var key in keys)
+                    {
+                        db.KeyDelete(key);
+                    }
+                }
+            }
+        }
     }
 }

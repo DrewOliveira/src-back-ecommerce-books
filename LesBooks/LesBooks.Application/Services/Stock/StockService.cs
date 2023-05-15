@@ -70,5 +70,9 @@ namespace LesBooks.Application.Services
 
             return validateStockByBookIdResponse;
         }
+        public void FreeBlockStock(int clientId)
+        {
+           
+        }
     }
 }

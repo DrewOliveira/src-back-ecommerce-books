@@ -43,6 +43,7 @@ namespace LesBooks.Application.Services.Client
                     zipCode = request.zipCode
                 };
                 adress = _adressDAO.CreateAdress(request.id_client,adress);
+                response.id = adress.id;
             }
             catch(Exception ex)
             {
