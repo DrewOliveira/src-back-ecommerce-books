@@ -47,7 +47,59 @@ namespace LesBooks.DAL.DAOs
                 throw;
             }
         }
-       
+
+        public Order CreateReplacement(Order order)
+        {
+            try
+            {
+                string sql = "INSERT INTO orders(totalValue,dateOrder, client_id, adress_id, status_order_id, type_order_id) " +
+                    "VALUES (@totalValue,@dateOrder, @client_id, @adress_id, @status_order_id, @type_order_id); SELECT SCOPE_IDENTITY();";
+
+                OpenConnection();
+                cmd.CommandText = sql;
+                cmd.Parameters.AddWithValue("@totalValue", order.totalValue);
+                cmd.Parameters.AddWithValue("@dateOrder", order.dateOrder);
+                cmd.Parameters.AddWithValue("@client_id", order.client.id);
+                cmd.Parameters.AddWithValue("@adress_id", order.adress.id);
+                cmd.Parameters.AddWithValue("@status_order_id", order.statusOrder);
+                cmd.Parameters.AddWithValue("@type_order_id", order.type);
+
+                order.id = Convert.ToInt32(cmd.ExecuteScalar());
+
+                this.CreateItensOrder(order.items, order.id);
+
+                
+                return order;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                CloseConnection();
+            }
+
+        }
+
+        private void CreateItensOrder(List<Item> itens, int order_id)
+        {
+            try
+            {
+                foreach (Item item in itens)
+                {
+                    itemDAO.CreateItem(item, order_id);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                CloseConnection();
+            }
+        }
 
         public OrderPurchase GetOrderById(int order_id)
         {
