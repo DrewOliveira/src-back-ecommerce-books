@@ -1,5 +1,6 @@
 ﻿using AngleSharp.Io;
 using LesBooks.Application.Requests;
+using LesBooks.Application.Requests.Order;
 using LesBooks.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +24,29 @@ namespace LesBooks.API.Controllers
         public async Task<ActionResult<dynamic>> Post([FromBody] CreateOrderPurchaseRequest request)
         {
             var response = await this._orderService.CreateOrderPurchase(request);
-            if (response.erros.Count == 0)
+            if (response.erros == null)
+            {
+                return StatusCode((int)HttpStatusCode.OK);
+            }
+            return StatusCode((int)HttpStatusCode.InternalServerError, response.erros);
+        }
+        [HttpPost("replacement")]
+        public async Task<ActionResult<dynamic>> PostReplacement([FromBody] CreateOrderReplacementRequest request)
+        {
+            var response = await this._orderService.CreateOrderReplacement(request);
+            if (response.erros == null)
+            {
+                return StatusCode((int)HttpStatusCode.OK);
+            }
+            return StatusCode((int)HttpStatusCode.InternalServerError, response.erros);
+        }
+
+        [HttpPatch]
+        public async Task<ActionResult<dynamic>> Patch([FromBody] PatchOrderRequest request)
+        {
+            
+            var response = await _orderService.PatchOrder(request);
+            if (response.erros == null)
             {
                 return StatusCode((int)HttpStatusCode.OK);
             }
@@ -35,19 +58,30 @@ namespace LesBooks.API.Controllers
         {
             var response = await this._orderService.GetOrderPurchaseByClientId(id);
 
-            if (response.erros.Count == 0)
+            if (response.erros == null)
             {
                 return StatusCode((int)HttpStatusCode.OK, response.purchases);
             }
             return StatusCode((int)HttpStatusCode.InternalServerError, response.erros);
         }
 
+        [HttpGet("delivery/{zipcode}")]
+        public async Task<ActionResult<dynamic>> GetDeliveryPrice(string zipcode)
+        {
+            var response = this._orderService.DeliveryPrice(zipcode);
+
+            if (response != 0)
+            {
+                return StatusCode((int)HttpStatusCode.OK, response);
+            }
+            return StatusCode((int)HttpStatusCode.InternalServerError, response);
+        }
         [HttpGet("{id}")]
         public async Task<ActionResult<dynamic>> GetOrderById(int id)
         {
             var response = await this._orderService.GetOrderById(id);
 
-            if (response.erros.Count == 0)
+            if (response.erros == null)
             {
                 return StatusCode((int)HttpStatusCode.OK, response.order_generic);
             }
@@ -59,7 +93,7 @@ namespace LesBooks.API.Controllers
         {
             var response = await this._orderService.GetOrders();
 
-            if (response.erros.Count == 0)
+            if (response.erros == null)
             {
                 return StatusCode((int)HttpStatusCode.OK, response.orders);
             }

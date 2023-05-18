@@ -10,5 +10,6 @@ namespace LesBooks.Application.Services.Interfaces
     public interface IBookService
     {
         Task<GetAllBookResponse> GetAllBooks();
+        Task<GetBookResponse> GetBook(int id);
     }
 }

@@ -11,6 +11,6 @@ namespace LesBooks.DAL.Interfaces
     {
         public Stock GetStockByBookId(int id);
 
-        public void UpdateQuantityStockByBookId(int quantity, int book_id);
+        public void UpdateQuantityStockByBookId(int quantity, int book_id,bool remove);
     }
 }

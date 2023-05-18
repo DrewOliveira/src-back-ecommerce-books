@@ -1,4 +1,5 @@
-﻿using LesBooks.Application.Services;
+﻿using AngleSharp.Browser.Dom;
+using LesBooks.Application.Services;
 using LesBooks.Application.Services.Client;
 using LesBooks.Application.Services.Interfaces;
 using LesBooks.DAL;
@@ -42,12 +43,15 @@ namespace LesBooks.IoC
             services.AddScoped<IStockEntryHistoryDAO, StockEntryHistoryDAO>();
             services.AddScoped<IActivationStatusReasonDAO, ActivationStatusReasonDAO>();
             services.AddScoped<ICategoryStatusReasonDAO, CategoryStatusReasonDAO>();
-
             services.AddScoped<ICouponDAO, CouponDAO>();
             services.AddScoped<IPaymentDAO, PaymentDAO>();
             services.AddScoped<IItemDAO, ItemDAO>();
             services.AddScoped<IOrderPurchaseDAO, OrderPurchaseDAO>();
             services.AddScoped<IOrderDAO, OrderDAO>();
+            services.AddScoped<IOrderHistoryStatusDAO, OrderHistoryStatusDAO>();
+
+            //Redis
+            services.AddScoped<IStockRedis,StockRedis>();
 
             return services;
         }

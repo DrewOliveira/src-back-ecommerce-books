@@ -43,16 +43,16 @@ namespace LesBooks.Application.Services.Client
                     zipCode = request.zipCode
                 };
                 adress = _adressDAO.CreateAdress(request.id_client,adress);
+                response.id = adress.id;
             }
             catch(Exception ex)
             {
-                response.erros = new List<Erro>()
-                {
+                response.erros = 
                     new Erro()
                     {
                         descricao = ex.Message,
                         detalhes = ex
-                    }
+                    
                 };
             }
             return response;
@@ -86,6 +86,7 @@ namespace LesBooks.Application.Services.Client
                 adress.city = item.City;
                 adress.state = item.State;
                 adress.neighborhood = item.District;
+                adress.zipCode = item.ZipCode;
                 response.adress = adress;
             }
             
@@ -126,13 +127,12 @@ namespace LesBooks.Application.Services.Client
             }
             catch (Exception ex)
             {
-                response.erros = new List<Erro>()
-                {
+                response.erros=
                     new Erro()
                     {
                         descricao = ex.Message,
                         detalhes = ex
-                    }
+                    
                 };
             }
             return response;

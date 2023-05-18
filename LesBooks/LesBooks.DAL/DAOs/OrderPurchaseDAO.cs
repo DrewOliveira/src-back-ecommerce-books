@@ -27,17 +27,58 @@ namespace LesBooks.DAL.DAOs
             this.couponDAO = couponDAO;
             this.clientDAO = clientDAO;
         }
+        public void CreateStatusHistory(int idStatusOrder, int idOrder, int idUser)
+        {
+
+            try
+            {
+                string query = "INSERT INTO orderStatusHistory (id_status_order, id_order, id_user,UpdateDate) VALUES (@idStatusOrder, @idOrder, @idUser,@UpdateDate)";
+                OpenConnection();
+
+                cmd.Parameters.AddWithValue("@idStatusOrder", idStatusOrder);
+                cmd.Parameters.AddWithValue("@idOrder", idOrder);
+                cmd.Parameters.AddWithValue("@idUser", idUser);
+                cmd.Parameters.AddWithValue("@UpdateDate", DateTime.Now);
+
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+        public void UpdateStatusOrder(int idOrder,int statusOrder)
+        {
+            try
+            {
+                string query = "UPDATE orders SET  status_order_id = @status_order_id WHERE id = @order_id ";
+                OpenConnection();
+                cmd.CommandText = query;
+                cmd.Parameters.AddWithValue("@status_order_id", statusOrder);
+                cmd.Parameters.AddWithValue("@order_id", idOrder);
+
+
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
 
         public OrderPurchase CreatePurchase(OrderPurchase purchase)
         {
             try
             {
-                string sql = "INSERT INTO orders(totalValue, client_id, adress_id, status_order_id, type_order_id) " +
-                    "VALUES (@totalValue, @client_id, @adress_id, @status_order_id, @type_order_id); SELECT SCOPE_IDENTITY();";
+                string sql = "INSERT INTO orders(totalValue,dateOrder, client_id, adress_id, status_order_id, type_order_id) " +
+                    "VALUES (@totalValue,@dateOrder, @client_id, @adress_id, @status_order_id, @type_order_id); SELECT SCOPE_IDENTITY();";
 
                 OpenConnection();
                 cmd.CommandText = sql;
                 cmd.Parameters.AddWithValue("@totalValue", purchase.totalValue);
+                cmd.Parameters.AddWithValue("@dateOrder", purchase.dateOrder);
                 cmd.Parameters.AddWithValue("@client_id", purchase.client.id);
                 cmd.Parameters.AddWithValue("@adress_id", purchase.adress.id);
                 cmd.Parameters.AddWithValue("@status_order_id", purchase.statusOrder);
@@ -46,6 +87,7 @@ namespace LesBooks.DAL.DAOs
                 purchase.id = Convert.ToInt32(cmd.ExecuteScalar());
 
                 this.CreateItensOrderPurchase(purchase.items, purchase.id);
+                
                 this.CreatePaymentsOrderPurchase(purchase.payments, purchase.id);
                 return purchase;
             }
@@ -97,7 +139,7 @@ namespace LesBooks.DAL.DAOs
                 CloseConnection();
             }
         }
-
+       
         public List<OrderPurchase> GetOrderPurchases(int ?client_id)
         {
             List<OrderPurchase > purchases = new List<OrderPurchase>();
@@ -131,7 +173,9 @@ namespace LesBooks.DAL.DAOs
                     orderPurchase.adress = adressDAO.GetAdressById((int)reader["adress_id"]);
                     orderPurchase.client = clientDAO.GetClientById((int)reader["client_id"]);
                     orderPurchase.statusOrder = (Model.Enums.StatusOrder)Convert.ToInt32((int)reader["status_order_id"]);
-
+                    string data = reader["dateOrder"].ToString();
+                    if(!String.IsNullOrEmpty(data))
+                    orderPurchase.dateOrder = Convert.ToDateTime(data);
                     purchases.Add(orderPurchase);
                 }
 

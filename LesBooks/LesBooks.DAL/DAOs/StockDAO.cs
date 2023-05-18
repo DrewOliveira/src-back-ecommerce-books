@@ -45,12 +45,12 @@ namespace LesBooks.DAL.DAOs
             return stock;
         }
 
-        public void UpdateQuantityStockByBookId(int quantity, int book_id)
+        public void UpdateQuantityStockByBookId(int quantity, int book_id,bool remove)
         {
             try
             {
                 OpenConnection();
-                string sql = "UPDATE stock SET quantity = quantity - @quantity WHERE book_id = @book_id";
+                string sql = String.Format("UPDATE stock SET quantity = quantity {0} @quantity WHERE book_id = @book_id", remove ? "-" : "+");
                 cmd.Parameters.AddWithValue("@book_id", book_id);
                 cmd.Parameters.AddWithValue("@quantity", quantity);
                 cmd.CommandText = sql;

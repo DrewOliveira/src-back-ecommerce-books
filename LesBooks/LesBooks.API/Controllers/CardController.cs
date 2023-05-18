@@ -22,7 +22,7 @@ namespace LesBooks.API.Controllers
         {
             var response = await this._cardService.GetCarde(id);
 
-            if (response.erros.Count == 0)
+            if (response.erros == null)
             {
                 return StatusCode((int)HttpStatusCode.OK, response.card);
             }
@@ -35,7 +35,7 @@ namespace LesBooks.API.Controllers
         {
             var response = await this._cardService.ListCardes(id);
 
-            if (response.erros.Count == 0)
+            if (response.erros == null)
             {
                 return StatusCode((int)HttpStatusCode.OK, response.cards);
             }
@@ -47,7 +47,7 @@ namespace LesBooks.API.Controllers
         public async Task<ActionResult<dynamic>> Post([FromBody] CreateCardRequest request)
         {
             var response = await this._cardService.CreateCard(request);
-            if (response.erros.Count == 0)
+            if (response.erros == null)
             {
                 return StatusCode((int)HttpStatusCode.OK);
             }
@@ -58,7 +58,7 @@ namespace LesBooks.API.Controllers
         public async Task<ActionResult<dynamic>> Put([FromBody] UpdateCardRequest request)
         {
             var response = await this._cardService.UpdateCard(request);
-            if (response.erros.Count == 0)
+            if (response.erros == null)
             {
                 return StatusCode((int)HttpStatusCode.OK);
             }
@@ -69,7 +69,7 @@ namespace LesBooks.API.Controllers
         public async Task<ActionResult<dynamic>> Delete(int id)
         {
             var response = await this._cardService.DeleteCard(id);
-            if (response.erros.Count == 0)
+            if (response.erros == null)
             {
                 return StatusCode((int)HttpStatusCode.OK);
             }

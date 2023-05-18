@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using LesBooks.DAL.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace LesBooks.API.Controllers
 {
@@ -7,13 +9,38 @@ namespace LesBooks.API.Controllers
     [ApiController]
     public class CouponController : ControllerBase
     {
-        public CouponController()
+        ICouponDAO _couponDao;
+        public CouponController(ICouponDAO couponDAO)
         {
+            _couponDao = couponDAO;
 
         }
-        [HttpGet("{id}")]
-        public void GetAll (int id)
+        [HttpGet("client/{id}")]
+        public async Task<ActionResult<dynamic>> GetAll (int id)
         {
+            var response = this._couponDao.GetAllCouponsByClientId(id);
+
+            if (response.Count != 0)
+            {
+                return StatusCode((int)HttpStatusCode.OK, response);
+            }
+            return StatusCode((int)HttpStatusCode.InternalServerError);
+
+        }
+        [HttpGet("{id}/{description}")]
+        public async Task<ActionResult<dynamic>> GetAll(int id,string description)
+        {
+            var response = this._couponDao.GetCouponByDescription(description,id);
+
+            if (response.Count != 0)
+            {
+                return StatusCode((int)HttpStatusCode.OK, response.FirstOrDefault());
+            }
+            else
+            {
+                return StatusCode((int)HttpStatusCode.NoContent);
+            }
+            
 
         }
     }

@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace LesBooks.Application.Responses
 {
-    public class ResponseBase
+    public class CreateLockResponse : ResponseBase
     {
-        public Erro erros;
+        public DateTime expireTime;
     }
 }

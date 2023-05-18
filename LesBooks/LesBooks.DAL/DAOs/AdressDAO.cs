@@ -22,7 +22,7 @@ namespace LesBooks.DAL
                 string sql = "INSERT INTO adresses (fk_id_client,street,number,zipcode,obs,identification,neighborhood,city,state,country,typeAdress,typeResidence,typeStreet)" +
                         "VALUES (@fk_id_client,@street,@number,@zipcode,@obs,@identification,@neighborhood,@city,@state,@country,@typeAdress,@typeResidence,@typeStreet)" +
                         "SELECT SCOPE_IDENTITY()";
-                cmd.Parameters.AddWithValue("@fk_id_client", id);
+                cmd.Parameters.AddWithValue("@fk_id_client", id == 0 ? (object)DBNull.Value : id);
                 cmd.Parameters.AddWithValue("@street", adress.street);
                 cmd.Parameters.AddWithValue("@identification", adress.identification);
                 cmd.Parameters.AddWithValue("@state", adress.state);

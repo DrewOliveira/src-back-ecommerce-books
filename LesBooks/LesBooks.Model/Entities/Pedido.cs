@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LesBooks.Application.Responses
+namespace LesBooks.Model.Entities
 {
-    public class ResponseBase
+    public abstract class Pedido
     {
-        public Erro erros;
+        public string itens { get; set; }
     }
 }

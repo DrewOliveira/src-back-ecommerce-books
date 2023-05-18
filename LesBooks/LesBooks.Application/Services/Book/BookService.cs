@@ -17,7 +17,26 @@ namespace LesBooks.Application.Services
         {
             _bookDAO = ibookDAO;
         }
+        public async Task<GetBookResponse> GetBook(int id)
+        {
+            GetBookResponse getBookResponse = new GetBookResponse();
 
+            try
+            {
+                getBookResponse.book = _bookDAO.GetBookById(id);
+            }
+            catch (Exception err)
+            {
+                getBookResponse.erros = new Erro
+                {
+                    descricao = err.Message,
+                    detalhes = err
+                };
+            }
+
+            return getBookResponse;
+
+        }
         public async Task<GetAllBookResponse> GetAllBooks()
         {
             GetAllBookResponse getAllBookResponse = new GetAllBookResponse();
@@ -28,11 +47,11 @@ namespace LesBooks.Application.Services
             }
             catch (Exception err)
             {
-                getAllBookResponse.erros.Add(new Erro
+                getAllBookResponse.erros = new Erro
                 {
                     descricao = err.Message,
                     detalhes = err
-                });
+                };
             }
 
             return getAllBookResponse;

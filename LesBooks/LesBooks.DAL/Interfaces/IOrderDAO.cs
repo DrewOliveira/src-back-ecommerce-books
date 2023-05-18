@@ -10,5 +10,6 @@ namespace LesBooks.DAL.Interfaces
     public interface IOrderDAO
     {
         public OrderPurchase GetOrderById(int order_id);
+        public Order CreateReplacement(Order order);
     }
 }
