@@ -87,6 +87,7 @@ namespace LesBooks.DAL.DAOs
                 purchase.id = Convert.ToInt32(cmd.ExecuteScalar());
 
                 this.CreateItensOrderPurchase(purchase.items, purchase.id);
+                
                 this.CreatePaymentsOrderPurchase(purchase.payments, purchase.id);
                 return purchase;
             }

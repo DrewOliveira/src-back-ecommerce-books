@@ -123,7 +123,7 @@ namespace LesBooks.DAL.DAOs
 
             try
             {
-                string sql = "SELECT coupon.* FROM coupon INNER JOIN client_coupon ON coupon.id = client_coupon.coupon_id WHERE client_coupon.client_id = @client_id and coupon.description = @description";
+                string sql = "SELECT coupon.* FROM coupon INNER JOIN client_coupon ON coupon.id = client_coupon.coupon_id WHERE client_coupon.client_id = @client_id and coupon.description = @description and orders_id is null";
 
                 OpenConnection();
 
@@ -156,10 +156,9 @@ namespace LesBooks.DAL.DAOs
 
             return coupons;
         }
-        public List<Coupon> UpdateCoupon(int id_coupon ,int order_id)
+        public void UpdateCoupon(int id_coupon ,int order_id)
         {
-            List<Coupon> coupons = new List<Coupon>();
-
+            
             try
             {
                 string sql = "UPDATE coupon SET orders_id = @orders_id, active = 0 WHERE id_coupon = @id_coupon";
@@ -182,20 +181,46 @@ namespace LesBooks.DAL.DAOs
                 CloseConnection();
             }
 
-            return coupons;
+            
         }
-        public List<Coupon> CreateCoupon(Coupon coupon, int client_id)
+        public void CreateCoupon(Coupon coupon, int client_id)
         {
-            List<Coupon> coupons = new List<Coupon>();
-
+           
             try
             {
-                string sql = "UPDATE coupon SET orders_id = @orders_id, active = 0 WHERE id_coupon = @id_coupon";
+                string sql = "INSERT INTO coupon (description,value,active,type_coupon_id) VALUES (@description,@value,1,@type_coupon_id); SELECT SCOPE_IDENTITY();";
 
                 OpenConnection();
 
-                cmd.Parameters.AddWithValue("@id_coupon", coupon);
-                cmd.Parameters.AddWithValue("@client_id", client_id);
+                cmd.Parameters.AddWithValue("@description", coupon);
+                cmd.Parameters.AddWithValue("@value", coupon.value);
+                cmd.Parameters.AddWithValue("@type_coupon_id", (int)coupon.typeCoupon);
+                cmd.CommandText = sql;
+                coupon.id = Convert.ToInt32(cmd.ExecuteScalar());
+                AddCouponToclient(coupon.id,client_id);
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                CloseConnection();
+            }
+
+        }
+
+        private void AddCouponToclient(int coupon_id, int client_id)
+        {
+            try
+            {
+                string sql = "INSERT INTO client_coupon (client_id,coupon_id) VALUES (@client_id,@coupon_id);";
+
+                OpenConnection();
+
+                cmd.Parameters.AddWithValue("@client_id", coupon_id);
+                cmd.Parameters.AddWithValue("@coupon_id", client_id);
                 cmd.CommandText = sql;
                 cmd.ExecuteNonQuery();
 
@@ -209,8 +234,6 @@ namespace LesBooks.DAL.DAOs
             {
                 CloseConnection();
             }
-
-            return coupons;
         }
 
     }

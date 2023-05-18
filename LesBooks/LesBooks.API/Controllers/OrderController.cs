@@ -1,5 +1,6 @@
 ﻿using AngleSharp.Io;
 using LesBooks.Application.Requests;
+using LesBooks.Application.Requests.Order;
 using LesBooks.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -29,7 +30,17 @@ namespace LesBooks.API.Controllers
             }
             return StatusCode((int)HttpStatusCode.InternalServerError, response.erros);
         }
-        
+        [HttpPost("replacement")]
+        public async Task<ActionResult<dynamic>> PostReplacement([FromBody] CreateOrderReplacementRequest request)
+        {
+            var response = await this._orderService.CreateOrderReplacement(request);
+            if (response.erros == null)
+            {
+                return StatusCode((int)HttpStatusCode.OK);
+            }
+            return StatusCode((int)HttpStatusCode.InternalServerError, response.erros);
+        }
+
         [HttpPatch]
         public async Task<ActionResult<dynamic>> Patch([FromBody] PatchOrderRequest request)
         {

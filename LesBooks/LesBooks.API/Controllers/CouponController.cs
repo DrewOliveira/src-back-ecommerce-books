@@ -36,7 +36,11 @@ namespace LesBooks.API.Controllers
             {
                 return StatusCode((int)HttpStatusCode.OK, response.FirstOrDefault());
             }
-            return StatusCode((int)HttpStatusCode.InternalServerError);
+            else
+            {
+                return StatusCode((int)HttpStatusCode.NoContent);
+            }
+            
 
         }
     }

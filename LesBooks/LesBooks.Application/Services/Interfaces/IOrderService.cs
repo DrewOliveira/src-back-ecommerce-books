@@ -21,5 +21,6 @@ namespace LesBooks.Application.Services.Interfaces
         public Task<GetOrdersResponse> GetOrders();
         public double DeliveryPrice(string cep);
         public Task<ResponseBase> PatchOrder(PatchOrderRequest request);
+        public Task<ResponseBase> CreateOrderReplacement(CreateOrderReplacementRequest request);
     }
 }

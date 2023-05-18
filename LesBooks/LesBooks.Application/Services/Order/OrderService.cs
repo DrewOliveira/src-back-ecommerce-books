@@ -1,4 +1,5 @@
-﻿using AngleSharp.Io;
+﻿using AngleSharp.Css;
+using AngleSharp.Io;
 using LesBooks.Application.Requests;
 using LesBooks.Application.Requests.Order;
 using LesBooks.Application.Responses;
@@ -7,6 +8,7 @@ using LesBooks.DAL;
 using LesBooks.DAL.Interfaces;
 using LesBooks.Model.Entities;
 using LesBooks.Model.Enums;
+using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,20 +43,62 @@ namespace LesBooks.Application.Services
             _orderHistoryStatusDAO = orderHistoryStatusDAO;
 
         }
+        public async Task<ResponseBase> CreateOrderReplacement(CreateOrderReplacementRequest request)
+        {
+            ResponseBase response = new ResponseBase();
+            try
+            {
+                Order orderOrigin = _orderDAO.GetOrderById(request.order_Id);
+                Order orderReplacement = new Order();
+                orderReplacement.items = request.items.FindAll(orderItem => request.items.Any(item => item.id == orderItem.id));
+                if (!request.items.All(requestItem => orderReplacement.items.Any(replace => replace.id == requestItem.id)))
+                {
+                    throw new Exception("Houve um erro no processamento da troca.");
+                }
+                orderReplacement.totalValue = GetTotalValue(orderReplacement.items, null, 0);
+                orderReplacement.client = orderOrigin.client;
+                orderReplacement.dateOrder = DateTime.Now;
+                orderReplacement.type = TypeOrder.REPLACEMENT;
+                orderReplacement.statusOrder = StatusOrder.REPLACEMENT;
 
+                orderReplacement = _orderDAO.CreateReplacement(orderReplacement);
+                _orderHistoryStatusDAO.CreateStatusHistory((int)orderReplacement.statusOrder, orderReplacement.id, 0);
+                this.UpdateStockQuantity(orderReplacement.items, false);
+
+
+            }
+            catch (Exception ex)
+            {
+                response.erros = new Erro { descricao = ex.Message, detalhes = ex };
+            }
+            return response;
+        }
         public async Task<CreateOrderPurchaseResponse> CreateOrderPurchase(CreateOrderPurchaseRequest request)
         {
-            List<Item> itens = new List<Item>();
-            List<Payment> payments = new List<Payment>();
-            List<Coupon> coupons = new List<Coupon>();
             OrderPurchase orderPurchase = new OrderPurchase();
             CreateOrderPurchaseResponse response = new CreateOrderPurchaseResponse();
 
             try
             {
-                itens = await this.GetItens(request.itens);
 
-                if (!this.CheckoutQuantityStock(itens))
+                #region Obtendo dados completos da compra
+                orderPurchase.adress = _adressDAO.GetAdressById(request.adress_delivery_id);
+                orderPurchase.client = _clientDAO.GetClientById(request.client_id);
+                orderPurchase.items = await this.GetItens(request.itens);
+                orderPurchase.payments = await this.GetPayments(request.payments);
+                orderPurchase.coupons = await this.GetCoupons(request.coupons);
+                orderPurchase.dateOrder = DateTime.Now;
+                orderPurchase.type = Model.Enums.TypeOrder.PURCHASE;
+                #endregion
+
+                #region Valor da compra
+                double deliveyPrice = DeliveryPrice(orderPurchase.adress.zipCode);
+                orderPurchase.totalValue = this.GetTotalValue(orderPurchase.items, orderPurchase.coupons, deliveyPrice);
+                #endregion
+
+
+                #region Validando estoque
+                if (!this.CheckoutQuantityStock(orderPurchase.items))
                 {
                     response.erros = new Erro
                     {
@@ -65,34 +109,27 @@ namespace LesBooks.Application.Services
 
                     return response;
                 }
+                #endregion
 
-                payments = await this.GetPayments(request.payments);
-                coupons = await this.GetCoupons(request.coupons);
+                #region Validando pagamento
+                if(orderPurchase.totalValue > 0)
+                {
+                    if (PaymentValidation(orderPurchase.totalValue, orderPurchase.payments))
+                        throw new Exception("Ocorreu um erro com o pagamento!");
+                }
+                #endregion
 
-
-                orderPurchase.totalValue = this.GetTotalValue(itens, coupons);
-                orderPurchase.dateOrder = DateTime.Now;
-                orderPurchase.items = itens;
-                orderPurchase.type = Model.Enums.TypeOrder.PURCHASE;
-                orderPurchase.payments = payments;
-                orderPurchase.coupons = coupons;
-                orderPurchase.adress = _adressDAO.GetAdressById(request.adress_delivery_id);
-                orderPurchase.client = _clientDAO.GetClientById(request.client_id);
-                orderPurchase.statusOrder = StatusOrder.PROCESSING;
-                orderPurchase.totalValue += DeliveryPrice(orderPurchase.adress.zipCode);
+                #region Criando novos cupons se necessário
+                if(orderPurchase.totalValue < 0)
+                {
+                    CreateCoupon(orderPurchase.totalValue, request.client_id);
+                }
+                #endregion
 
                 _orderPurchaseDAO.CreatePurchase(orderPurchase);
                 _orderHistoryStatusDAO.CreateStatusHistory((int)orderPurchase.statusOrder,orderPurchase.id, 0);
+                this.UpdateStockQuantity(orderPurchase.items,true);
 
-            }
-            catch (Exception ex)
-            {
-                response.erros = new Erro { descricao = ex.Message, detalhes = ex };
-            }
-
-            try
-            {
-                this.UpdateStockQuantity(itens);
             }
             catch (Exception ex)
             {
@@ -101,7 +138,32 @@ namespace LesBooks.Application.Services
 
             return response;
         }
+        public void CreateCoupon(double value, int client_id,TypeCoupon type = TypeCoupon.REPLACEMENT)
+        {
+            try
+            {
+                Coupon coupon = new Coupon()
+                {
+                    typeCoupon = type,
+                    value = value * -1
 
+                };
+                _couponDAO.CreateCoupon(coupon, client_id);
+            }
+            catch(Exception ex)
+            {
+
+            }
+        }
+        private Boolean PaymentValidation(double value,List<Payment> payments)
+        {
+            double aux = 0;
+            foreach(Payment payment in payments)
+            {
+                aux += payment.value;
+            }
+            return aux == value;
+        }
         private Boolean CheckoutQuantityStock(List<Item> itens)
         {
             Boolean checkout = true;
@@ -126,13 +188,13 @@ namespace LesBooks.Application.Services
             }
         }
 
-        private void UpdateStockQuantity(List<Item> itens)
+        private void UpdateStockQuantity(List<Item> itens,bool remove)
         {
             try
             {
                 foreach (var item in itens)
                 {
-                    _stockDAO.UpdateQuantityStockByBookId(item.quantity, item.book.id);
+                    _stockDAO.UpdateQuantityStockByBookId(item.quantity, item.book.id,remove);
                 }
             }
             catch (Exception ex)
@@ -141,18 +203,21 @@ namespace LesBooks.Application.Services
             }
         }
 
-        private Double GetTotalValue(List<Item> itens, List<Coupon> coupons)
+        private Double GetTotalValue(List<Item> itens, List<Coupon> coupons,double deliveryPrice)
         {
-            double totalValueMonted = 0;
+            double totalValueMonted = deliveryPrice;
 
             foreach (var item in itens)
             {
                 totalValueMonted = totalValueMonted + item.totalValue;
             }
 
-            foreach (var coupon in coupons)
+            if (coupons != null)
             {
-                totalValueMonted = totalValueMonted - coupon.value;
+                foreach (var coupon in coupons)
+                {
+                    totalValueMonted = totalValueMonted - coupon.value;
+                }
             }
 
             return totalValueMonted;
@@ -285,9 +350,20 @@ namespace LesBooks.Application.Services
             {
                 Order order = _orderDAO.GetOrderById(request.OrderId);
                 StatusOrder newStatus = (StatusOrder)request.statusId;
-                if ((int)order.statusOrder >= (int)newStatus)
+                if (CantTransitionTo(order.statusOrder,newStatus))
                 {
                     throw new Exception("Alteração de status não disponivél para o status encaminhado."); 
+                }
+                if(newStatus == StatusOrder.CHANGED)
+                {
+                    Coupon coupon = new Coupon()
+                    {
+                        value = order.totalValue,
+                        typeCoupon = TypeCoupon.REPLACEMENT,
+                        description = String.Format("TROCA{0}", order.totalValue)
+                    };
+                    _couponDAO.CreateCoupon(coupon, order.client.id);
+                    this.UpdateStockQuantity(order.items, false);
                 }
                 _orderPurchaseDAO.UpdateStatusOrder(request.OrderId, request.statusId);
                 _orderHistoryStatusDAO.CreateStatusHistory(request.statusId, request.OrderId, request.admId);
@@ -303,10 +379,31 @@ namespace LesBooks.Application.Services
                 };
             }
             return response;
-            } 
-        
-        
- 
+        }
+        public void CreateReplacementOrder()
+        {
+
+        }
+        private bool CantTransitionTo(StatusOrder currentStatus, StatusOrder newStatus)
+        {
+            
+            if (currentStatus == StatusOrder.FAILED)
+            {
+               
+                return true;
+            }
+
+            
+            int currentStatusValue = (int)currentStatus;
+            int newStatusValue = (int)newStatus;
+
+            
+            return newStatusValue <= currentStatusValue;
+        }
+
+
+
+
         public double DeliveryPrice(string zipcode)
         {
             string state =  _adressService.GetAdressByCep(zipcode).Result.adress.state;
