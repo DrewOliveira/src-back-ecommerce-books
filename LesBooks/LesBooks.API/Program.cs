@@ -1,3 +1,4 @@
+using LesBook.Monitoring;
 using LesBooks.API;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,5 +8,5 @@ startup.ConfigureServices(builder.Services);
 
 var app = builder.Build();
 
-startup.Configure(app, app.Environment);
+startup.Configure(app, app.Environment,app.Services.GetRequiredService<IMonitoring>());
 app.Run();

@@ -6,6 +6,8 @@ using System.Text;
 using System.Configuration;
 using Microsoft.AspNetCore.Rewrite;
 using LesBooks.IoC;
+using LesBook.Monitoring;
+using System.Threading;
 
 namespace LesBooks.API
 {
@@ -34,12 +36,16 @@ namespace LesBooks.API
                     });
             });
             services.AddCors();
+            services.Configure<HostOptions>(options =>
+            {
+                options.ShutdownTimeout = TimeSpan.FromSeconds(5); 
+            });
 
 
 
 
         }
-        public void Configure(WebApplication app, IWebHostEnvironment environment)
+        public void Configure(WebApplication app, IWebHostEnvironment environment, IMonitoring monitoring)
         {
 
             app.UseSwagger();
@@ -47,9 +53,10 @@ namespace LesBooks.API
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json",
                     "Swagger.LesBooks.V1");
-
             });
 
+
+            monitoring.InitMonitoting();
 
             var option = new RewriteOptions();
             option.AddRedirect("^$", "swagger");

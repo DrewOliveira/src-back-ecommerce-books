@@ -11,7 +11,7 @@ namespace LesBooks.DAL
         protected string server;
         public RedisConnection()
         {
-            server = "redis-15632.c11.us-east-1-3.ec2.cloud.redislabs.com:15632,password=123";
+            server = "localhost:6379";
             redis = ConnectionMultiplexer.Connect(server);
             db = redis.GetDatabase();
             

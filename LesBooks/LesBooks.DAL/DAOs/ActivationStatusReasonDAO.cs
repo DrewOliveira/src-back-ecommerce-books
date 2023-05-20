@@ -34,6 +34,7 @@ namespace LesBooks.DAL.DAOs
                     activationStatusReason.status = Convert.ToBoolean(reader["status"]);
                     activationStatusReason.categoryStatusReason = _activationStatusReasonDAO.GetCategoryStatusReasonById(Convert.ToInt32(reader["categoryStatusReason_id"]));
                 }
+                reader.Close();
             }
             catch
            {

@@ -12,8 +12,10 @@ namespace LesBooks.Model.Entities
 
         public Double value { get; set; }
 
-        public Boolean aprroved { get; set; }
+        public bool aprroved { get; set; }
 
         public Card card { get; set; }
+
+        public DateTime dateAproval { get; set; }
     }
 }

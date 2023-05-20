@@ -2,6 +2,7 @@
 using LesBooks.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Globalization;
 using System.Net;
 
 namespace LesBooks.API.Controllers
@@ -22,6 +23,7 @@ namespace LesBooks.API.Controllers
 
         [HttpGet()]
         public async Task<ActionResult<dynamic>> GetAllBooks()
+
         {
             var response = await this._bookService.GetAllBooks();
 

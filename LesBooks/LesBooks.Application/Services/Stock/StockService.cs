@@ -47,8 +47,15 @@ namespace LesBooks.Application.Services
             try
             {
                 Stock stock = _stockDAO.GetStockByBookId(bookId);
+                int blockedStock = 0;
+                try
+                {
+                    blockedStock = _stockRedis.getTemporaryBlockbyBook(bookId.ToString());
+                }
+                catch
+                {
 
-                int blockedStock = _stockRedis.getTemporaryBlockbyBook(bookId.ToString());
+                }
                 int freeStock = stock.quantity - blockedStock;
 
                 if (quantity <= freeStock)

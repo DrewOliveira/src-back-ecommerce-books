@@ -7,11 +7,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LesBooks.API", "LesBooks.AP
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LesBooks.Model", "LesBooks.Model\LesBooks.Model.csproj", "{ACBB03BA-E297-4397-9401-68054356B77D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LesBooks.Application", "LesBooks.Application\LesBooks.Application.csproj", "{97EF6648-B57F-4FD5-B463-B907C80E5D6D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LesBooks.Application", "LesBooks.Application\LesBooks.Application.csproj", "{97EF6648-B57F-4FD5-B463-B907C80E5D6D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LesBooks.IoC", "LesBooks.IoC\LesBooks.IoC.csproj", "{02975EEA-B9C0-435E-B7B4-00CEEDB74B59}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LesBooks.IoC", "LesBooks.IoC\LesBooks.IoC.csproj", "{02975EEA-B9C0-435E-B7B4-00CEEDB74B59}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LesBooks.DAL", "LesBooks.DAL\LesBooks.DAL.csproj", "{AEB5DF65-514D-4FC6-A886-F45EF6EDAF96}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LesBooks.DAL", "LesBooks.DAL\LesBooks.DAL.csproj", "{AEB5DF65-514D-4FC6-A886-F45EF6EDAF96}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LesBook.Monitoring", "LesBook.Monitoring\LesBook.Monitoring.csproj", "{4C7362E0-23CD-4747-B074-D26DC58774D6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{AEB5DF65-514D-4FC6-A886-F45EF6EDAF96}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AEB5DF65-514D-4FC6-A886-F45EF6EDAF96}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AEB5DF65-514D-4FC6-A886-F45EF6EDAF96}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C7362E0-23CD-4747-B074-D26DC58774D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C7362E0-23CD-4747-B074-D26DC58774D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C7362E0-23CD-4747-B074-D26DC58774D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C7362E0-23CD-4747-B074-D26DC58774D6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

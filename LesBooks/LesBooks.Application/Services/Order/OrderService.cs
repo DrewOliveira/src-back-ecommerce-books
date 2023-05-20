@@ -63,8 +63,7 @@ namespace LesBooks.Application.Services
 
                 orderReplacement = _orderDAO.CreateReplacement(orderReplacement);
                 _orderHistoryStatusDAO.CreateStatusHistory((int)orderReplacement.statusOrder, orderReplacement.id, 0);
-                this.UpdateStockQuantity(orderReplacement.items, false);
-
+                
 
             }
             catch (Exception ex)
@@ -89,6 +88,7 @@ namespace LesBooks.Application.Services
                 orderPurchase.coupons = await this.GetCoupons(request.coupons);
                 orderPurchase.dateOrder = DateTime.Now;
                 orderPurchase.type = Model.Enums.TypeOrder.PURCHASE;
+                orderPurchase.statusOrder = StatusOrder.PROCESSING;
                 #endregion
 
                 #region Valor da compra
@@ -162,7 +162,7 @@ namespace LesBooks.Application.Services
             {
                 aux += payment.value;
             }
-            return aux == value;
+            return aux != value;
         }
         private Boolean CheckoutQuantityStock(List<Item> itens)
         {
@@ -342,6 +342,7 @@ namespace LesBooks.Application.Services
 
             return response;
         }
+
         public async Task<ResponseBase> PatchOrder(PatchOrderRequest request)
         {
 
@@ -354,16 +355,23 @@ namespace LesBooks.Application.Services
                 {
                     throw new Exception("Alteração de status não disponivél para o status encaminhado."); 
                 }
-                if(newStatus == StatusOrder.CHANGED)
+                switch (newStatus)
                 {
-                    Coupon coupon = new Coupon()
-                    {
-                        value = order.totalValue,
-                        typeCoupon = TypeCoupon.REPLACEMENT,
-                        description = String.Format("TROCA{0}", order.totalValue)
-                    };
-                    _couponDAO.CreateCoupon(coupon, order.client.id);
-                    this.UpdateStockQuantity(order.items, false);
+                    case StatusOrder.CHANGED:
+                        Coupon coupon = new Coupon()
+                        {
+                            value = order.totalValue,
+                            typeCoupon = TypeCoupon.REPLACEMENT,
+                            description = String.Format("TROCA{0}", order.totalValue)
+                        };
+                        _couponDAO.CreateCoupon(coupon, order.client.id);
+                        if (request.updateStock)
+                            this.UpdateStockQuantity(order.items, false);
+                        break;
+                    case StatusOrder.APPROVED:
+                        this.UpdateStockQuantity(order.items, true);
+                        break;
+
                 }
                 _orderPurchaseDAO.UpdateStatusOrder(request.OrderId, request.statusId);
                 _orderHistoryStatusDAO.CreateStatusHistory(request.statusId, request.OrderId, request.admId);

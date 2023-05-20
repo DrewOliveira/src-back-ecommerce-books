@@ -24,6 +24,8 @@ namespace LesBooks.DAL
         }
         protected void CloseConnection()
         {
+            if(reader != null && !reader.IsClosed)
+                reader.Close();
             if (conn.State == System.Data.ConnectionState.Open)
                 conn.Close();
             cmd.Parameters.Clear();

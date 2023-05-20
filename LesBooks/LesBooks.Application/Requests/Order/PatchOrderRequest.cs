@@ -13,7 +13,7 @@ namespace LesBooks.Application.Requests
         public int OrderId { get; set; }
         [Required]
         public int statusId { get; set; }
-        [Required]
         public int admId { get; set; }
+        public bool updateStock { get; set; }
     }
 }

@@ -26,7 +26,7 @@ namespace LesBooks.DAL.DAOs
 
                 OpenConnection();
                 cmd.CommandText = sql;
-                cmd.Parameters.AddWithValue("@approved", payment.aprroved);
+                cmd.Parameters.AddWithValue("@approved", DBNull.Value);
                 cmd.Parameters.AddWithValue("@value", payment.value);
                 cmd.Parameters.AddWithValue("@card_id", payment.card.Id);
                 cmd.Parameters.AddWithValue("@orders_id", order_id);
@@ -67,7 +67,7 @@ namespace LesBooks.DAL.DAOs
                     order.id = orders_id;
 
                     payment.id = (int)reader["id"];
-                    payment.aprroved = Convert.ToBoolean(reader["approved"]);
+                    payment.aprroved = Convert.ToBoolean(reader["approved"] == DBNull.Value ? null : reader["approved"]);
                     payment.value = Convert.ToDouble(reader["value"]);
                     payment.card = cardDAO.GetCardById((int)reader["card_id"]);
                     //payment.order = order;
