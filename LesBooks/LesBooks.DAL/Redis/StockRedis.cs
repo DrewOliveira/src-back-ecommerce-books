@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LesBooks.Model.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
@@ -38,6 +39,39 @@ namespace LesBooks.DAL
             return DateTime.Now.AddMinutes(timeBlock);
 
         }
+        public void CreateBlock(string orderId, string bookId, int quantity)
+        {
+            blockKey = $"bloqueio:order:{orderId}:{bookId}";
+            try
+            {
+                db.StringSet(blockKey, quantity);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+        public void freeBlock(string orderId)
+        {
+            this.blockKey = $"bloqueio:order:{orderId}:*";
+            var endpoints = db.Multiplexer.GetEndPoints();
+
+
+            foreach (var endpoint in endpoints)
+            {
+                var server = db.Multiplexer.GetServer(endpoint);
+                var keys = server.Keys(pattern: blockKey);
+                foreach (var chave in keys)
+                {
+                    foreach (var key in keys)
+                    {
+                        db.KeyDelete(key);
+                    }
+                }
+            }
+        }
+
         public void IncrementTemporaryBlock(int quantity)
         {
           

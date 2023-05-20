@@ -29,7 +29,8 @@ namespace LesBooks.Application.Services
         IOrderDAO _orderDAO;
         IAdressService _adressService;
         IOrderHistoryStatusDAO _orderHistoryStatusDAO;
-        public OrderService(IBookDAO bookDAO, ICardDAO cardDAO, ICouponDAO couponDAO, IAdressDAO adressDAO, IOrderPurchaseDAO orderPurchaseDAO, IClientDAO clientDAO, IStockDAO stockDAO, IOrderDAO orderDAO, IAdressService adressService,IOrderHistoryStatusDAO orderHistoryStatusDAO)
+        IStockRedis _stockRedis;
+        public OrderService(IBookDAO bookDAO, ICardDAO cardDAO, ICouponDAO couponDAO, IAdressDAO adressDAO, IOrderPurchaseDAO orderPurchaseDAO, IClientDAO clientDAO, IStockDAO stockDAO, IOrderDAO orderDAO, IAdressService adressService,IOrderHistoryStatusDAO orderHistoryStatusDAO,IStockRedis stockRedis)
         {
             _bookDAO = bookDAO;
             _cardDAO = cardDAO;
@@ -41,6 +42,7 @@ namespace LesBooks.Application.Services
             _orderDAO = orderDAO;
             _adressService = adressService;
             _orderHistoryStatusDAO = orderHistoryStatusDAO;
+            _stockRedis = stockRedis;
 
         }
         public async Task<ResponseBase> CreateOrderReplacement(CreateOrderReplacementRequest request)
@@ -128,7 +130,8 @@ namespace LesBooks.Application.Services
 
                 _orderPurchaseDAO.CreatePurchase(orderPurchase);
                 _orderHistoryStatusDAO.CreateStatusHistory((int)orderPurchase.statusOrder,orderPurchase.id, 0);
-                this.UpdateStockQuantity(orderPurchase.items,true);
+                foreach (Item item in orderPurchase.items)
+                    _stockRedis.CreateBlock(orderPurchase.id.ToString(), item.book.id.ToString(), item.quantity);
 
             }
             catch (Exception ex)
@@ -369,6 +372,8 @@ namespace LesBooks.Application.Services
                             this.UpdateStockQuantity(order.items, false);
                         break;
                     case StatusOrder.APPROVED:
+                        _stockRedis.freeBlock(order.id.ToString());
+                        _stockRedis.freeTemporaryBlock(order.client.id.ToString());
                         this.UpdateStockQuantity(order.items, true);
                         break;
 
