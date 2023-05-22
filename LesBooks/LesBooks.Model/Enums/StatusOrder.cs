@@ -14,6 +14,7 @@ namespace LesBooks.Model.Enums
         TRANSPORT = 4,
         DELIVERED = 5,
         REPLACEMENT = 6,
-        CHANGED = 7
+        APPROVED_REPLACEMENT = 7,
+        CHANGED = 8
     }
 }

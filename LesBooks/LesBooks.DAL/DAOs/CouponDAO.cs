@@ -188,16 +188,18 @@ namespace LesBooks.DAL.DAOs
            
             try
             {
-                string sql = "INSERT INTO coupon (description,value,active,type_coupon_id) VALUES (@description,@value,1,@type_coupon_id); SELECT SCOPE_IDENTITY();";
+                string sql = "INSERT INTO coupon (description,value,active,type_coupon_id) " +
+                    "VALUES (@description,@value,1,@type_coupon_id); SELECT SCOPE_IDENTITY();";
 
                 OpenConnection();
 
-                cmd.Parameters.AddWithValue("@description", coupon);
+                cmd.Parameters.AddWithValue("@description", coupon.description);
                 cmd.Parameters.AddWithValue("@value", coupon.value);
                 cmd.Parameters.AddWithValue("@type_coupon_id", (int)coupon.typeCoupon);
                 cmd.CommandText = sql;
-                var id = Convert.ToInt32(cmd.ExecuteScalar());
-                AddCouponToclient(coupon.id,client_id);
+
+                coupon.id = Convert.ToInt32(cmd.ExecuteScalar());
+                AddCouponToclient(coupon.id, client_id);
 
             }
             catch (Exception)
@@ -219,8 +221,8 @@ namespace LesBooks.DAL.DAOs
 
                 OpenConnection();
 
-                cmd.Parameters.AddWithValue("@client_id", coupon_id);
-                cmd.Parameters.AddWithValue("@coupon_id", client_id);
+                cmd.Parameters.AddWithValue("@client_id", client_id);
+                cmd.Parameters.AddWithValue("@coupon_id", coupon_id);
                 cmd.CommandText = sql;
                 cmd.ExecuteNonQuery();
 
