@@ -170,7 +170,10 @@ namespace LesBooks.DAL.DAOs
                     orderPurchase.type = Model.Enums.TypeOrder.PURCHASE;
                     orderPurchase.payments = paymentDAO.GetAllPaymentsByOrderId((int)reader["id"]);
                     orderPurchase.coupons = couponDAO.GetAllCouponsByOrderId((int)reader["id"]);
-                    orderPurchase.adress = adressDAO.GetAdressById((int)reader["adress_id"]);
+                    if (!String.IsNullOrEmpty(reader["adress_id"].ToString()))
+                        orderPurchase.adress = adressDAO.GetAdressById((int)reader["adress_id"]);
+                    else
+                        orderPurchase.adress = new Adress();
                     orderPurchase.client = clientDAO.GetClientById((int)reader["client_id"]);
                     orderPurchase.statusOrder = (Model.Enums.StatusOrder)Convert.ToInt32((int)reader["status_order_id"]);
                     string data = reader["dateOrder"].ToString();

@@ -196,7 +196,7 @@ namespace LesBooks.DAL.DAOs
                 cmd.Parameters.AddWithValue("@value", coupon.value);
                 cmd.Parameters.AddWithValue("@type_coupon_id", (int)coupon.typeCoupon);
                 cmd.CommandText = sql;
-                coupon.id = Convert.ToInt32(cmd.ExecuteScalar());
+                var id = Convert.ToInt32(cmd.ExecuteScalar());
                 AddCouponToclient(coupon.id,client_id);
 
             }

@@ -57,6 +57,7 @@ namespace LesBooks.Application.Services
                 {
                     throw new Exception("Houve um erro no processamento da troca.");
                 }
+                orderReplacement.items = await GetItensReplacement(orderReplacement.items);
                 orderReplacement.totalValue = GetTotalValue(orderReplacement.items, null, 0);
                 orderReplacement.client = orderOrigin.client;
                 orderReplacement.dateOrder = DateTime.Now;
@@ -224,6 +225,31 @@ namespace LesBooks.Application.Services
             }
 
             return totalValueMonted;
+        }
+
+        private async Task<List<Item>> GetItensReplacement(List<Item> requestItens)
+        {
+            try
+            {
+                List<Item> itens = new List<Item>();
+                foreach (var itemRequest in requestItens)
+                {
+                    Item item = new Item();
+
+                    item.quantity = itemRequest.quantity;
+                    item.book = _bookDAO.GetBookById(itemRequest.book.id);
+                    item.totalValue = item.book.value * itemRequest.quantity;
+
+                    itens.Add(item);
+                }
+
+                return itens;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
         }
 
         private async Task<List<Item>> GetItens(List<ItemPurchaseRequest> requestItens)

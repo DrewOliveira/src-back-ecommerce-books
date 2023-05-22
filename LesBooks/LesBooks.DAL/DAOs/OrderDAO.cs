@@ -125,7 +125,10 @@ namespace LesBooks.DAL.DAOs
                     orderGeneric.type = (Model.Enums.TypeOrder)Convert.ToInt32(reader["type_order_id"]);
                     orderGeneric.payments = paymentDAO.GetAllPaymentsByOrderId((int)reader["id"]);
                     orderGeneric.coupons = couponDAO.GetAllCouponsByOrderId((int)reader["id"]);
-                    orderGeneric.adress = reader["adress_id"] != DBNull.Value ? adressDAO.GetAdressById((int)reader["adress_id"]) : new Adress();
+                    if (!String.IsNullOrEmpty(reader["adress_id"].ToString()))
+                        orderGeneric.adress = adressDAO.GetAdressById((int)reader["adress_id"]);
+                    else
+                        orderGeneric.adress = new Adress();
                     orderGeneric.client = clientDAO.GetClientById((int)reader["client_id"]);
                     orderGeneric.statusOrder = (Model.Enums.StatusOrder)Convert.ToInt32((int)reader["status_order_id"]);
                     orderGeneric.history = orderHistoryStatusDAO.getHistoryOrder(orderGeneric.id);
