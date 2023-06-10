@@ -23,37 +23,37 @@ namespace LesBooks.IoC
            IConfiguration configuration)
         {
             //Services
-            services.AddSingleton<IClientService, ClientService>();
-            services.AddSingleton<IAdressService, AdressService>();
-            services.AddSingleton<ICardService, CardService>();
-            services.AddSingleton<IBookService, BookService>();
-            services.AddSingleton<IStockService, StockService>();
-            services.AddSingleton<IOrderService, OrderService>();
+            services.AddScoped<IClientService, ClientService>();
+            services.AddScoped<IAdressService, AdressService>();
+            services.AddScoped<ICardService, CardService>();
+            services.AddScoped<IBookService, BookService>();
+            services.AddScoped<IStockService, StockService>();
+            services.AddScoped<IOrderService, OrderService>();
 
             //Daos
-            services.AddSingleton<IClientDAO, ClientDAO>();
-            services.AddSingleton<IAdressDAO, AdressDAO>();
-            services.AddSingleton<ICardDAO, CardDAO>();
-            services.AddSingleton<IUserDAO, UserDAO>();
-            services.AddSingleton<IFlagDAO, FlagDAO>();
-            services.AddSingleton<IBookDAO, BookDAO>();
-            services.AddSingleton<IBookCategoryDAO, BookCategoryDAO>();
-            services.AddSingleton<IAuthorDAO, AuthorDAO>();
-            services.AddSingleton<IPricingDAO, PricingDAO>();
-            services.AddSingleton<IPublisherDAO, PublisherDAO>();
-            services.AddSingleton<IStockDAO, StockDAO>();
-            services.AddSingleton<IStockEntryHistoryDAO, StockEntryHistoryDAO>();
-            services.AddSingleton<IActivationStatusReasonDAO, ActivationStatusReasonDAO>();
-            services.AddSingleton<ICategoryStatusReasonDAO, CategoryStatusReasonDAO>();
-            services.AddSingleton<ICouponDAO, CouponDAO>();
-            services.AddSingleton<IPaymentDAO, PaymentDAO>();
-            services.AddSingleton<IItemDAO, ItemDAO>();
-            services.AddSingleton<IOrderPurchaseDAO, OrderPurchaseDAO>();
-            services.AddSingleton<IOrderDAO, OrderDAO>();
-            services.AddSingleton<IOrderHistoryStatusDAO, OrderHistoryStatusDAO>();
+            services.AddScoped<IClientDAO, ClientDAO>();
+            services.AddScoped<IAdressDAO, AdressDAO>();
+            services.AddScoped<ICardDAO, CardDAO>();
+            services.AddScoped<IUserDAO, UserDAO>();
+            services.AddScoped<IFlagDAO, FlagDAO>();
+            services.AddScoped<IBookDAO, BookDAO>();
+            services.AddScoped<IBookCategoryDAO, BookCategoryDAO>();
+            services.AddScoped<IAuthorDAO, AuthorDAO>();
+            services.AddScoped<IPricingDAO, PricingDAO>();
+            services.AddScoped<IPublisherDAO, PublisherDAO>();
+            services.AddScoped<IStockDAO, StockDAO>();
+            services.AddScoped<IStockEntryHistoryDAO, StockEntryHistoryDAO>();
+            services.AddScoped<IActivationStatusReasonDAO, ActivationStatusReasonDAO>();
+            services.AddScoped<ICategoryStatusReasonDAO, CategoryStatusReasonDAO>();
+            services.AddScoped<ICouponDAO, CouponDAO>();
+            services.AddScoped<IPaymentDAO, PaymentDAO>();
+            services.AddScoped<IItemDAO, ItemDAO>();
+            services.AddScoped<IOrderPurchaseDAO, OrderPurchaseDAO>();
+            services.AddScoped<IOrderDAO, OrderDAO>();
+            services.AddScoped<IOrderHistoryStatusDAO, OrderHistoryStatusDAO>();
 
             //Redis
-            services.AddSingleton<IStockRedis,StockRedis>();
+            services.AddScoped<IStockRedis,StockRedis>();
 
             //monitoring 
             services.AddSingleton<IMonitoring, Monitoring>();

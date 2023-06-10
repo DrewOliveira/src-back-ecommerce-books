@@ -45,6 +45,16 @@ namespace LesBooks.Application.Services
             _stockRedis = stockRedis;
 
         }
+
+        public async Task<GetDashboardResponse> GetDashboard(GetDashboardRequest request)
+        {
+            GetDashboardResponse response = new GetDashboardResponse();
+            response.dashboard = new Dashboard();
+            response.dashboard.AddLabel(request.init, request.end);
+            response.dashboard = _orderDAO.GetDashboard(response.dashboard);
+            return response;
+
+        }
         public async Task<ResponseBase> CreateOrderReplacement(CreateOrderReplacementRequest request)
         {
             ResponseBase response = new ResponseBase();
@@ -133,6 +143,7 @@ namespace LesBooks.Application.Services
                 _orderHistoryStatusDAO.CreateStatusHistory((int)orderPurchase.statusOrder,orderPurchase.id, 0);
                 foreach (Item item in orderPurchase.items)
                     _stockRedis.CreateBlock(orderPurchase.id.ToString(), item.book.id.ToString(), item.quantity);
+                _stockRedis.freeTemporaryBlock(orderPurchase.client.id.ToString());
 
             }
             catch (Exception ex)

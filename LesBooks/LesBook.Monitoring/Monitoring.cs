@@ -2,24 +2,20 @@
 using LesBooks.DAL;
 using LesBooks.DAL.DAOs;
 using LesBooks.Model.Entities;
+using Newtonsoft.Json;
 using StackExchange.Redis;
+using System.Net.Http;
 using System.Reflection;
+using System.Text;
 
 namespace LesBook.Monitoring
 {
-    public class Monitoring : Connection , IMonitoring
+    public class Monitoring : Connection  , IMonitoring
     {
-
-
-        IOrderService orderService;
-        public Monitoring(IOrderService orderService)
-        {
-            this.orderService = orderService;
-        }
-
+        
         public void InitMonitoting()
         {
-            // Crie uma tarefa agendada que será executada a cada intervalo de tempo
+            
             Task.Run(async () =>
             {
                 while (true)
@@ -27,7 +23,7 @@ namespace LesBook.Monitoring
                     await VerifyPaymentPending();
                     await VerifyOrdersProcessing();
 
-                    // Defina o intervalo de tempo entre as verificações
+                     
                     await Task.Delay(TimeSpan.FromSeconds(120));
                 }
             });
@@ -87,7 +83,7 @@ namespace LesBook.Monitoring
                 }
             }
         }
-        public void VerifyPaymentPending(List<int> orders)
+        public async void VerifyPaymentPending(List<int> orders)
         {
             foreach(int order in orders)
             {
@@ -119,13 +115,7 @@ namespace LesBook.Monitoring
                         payments.Add(payment);
                     }
                     if (payments.All(payment => payment.dateAproval != DateTime.MinValue))
-                        payments.ForEach(payment => 
-                        orderService.PatchOrder(new LesBooks.Application.Requests.PatchOrderRequest
-                        {
-                            admId = 0,
-                            OrderId = order,
-                            statusId = payment.aprroved ? 2 : 3
-                        }));
+                        payments.ForEach(payment => patchOrder(order, payment.aprroved));   
                 }
                 catch (Exception)
                 {
@@ -136,6 +126,22 @@ namespace LesBook.Monitoring
                     CloseConnection();
                 }
             }
+        }
+        public async Task<dynamic> patchOrder(int order, bool aprroved)
+        {
+            using (HttpClient httpClient = new HttpClient())
+            {
+                string json = JsonConvert.SerializeObject(new LesBooks.Application.Requests.PatchOrderRequest
+                {
+                    admId = 0,
+                    OrderId = order,
+                    statusId = aprroved ? 2 : 3
+                });
+                StringContent content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                HttpResponseMessage response = await httpClient.PatchAsync("https://localhost:7260/api/order", content);
+            }
+            return null;
         }
         public async Task VerifyOrdersProcessing()
         {

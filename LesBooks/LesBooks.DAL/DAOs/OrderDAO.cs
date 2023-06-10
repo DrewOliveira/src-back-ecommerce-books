@@ -6,7 +6,9 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Net.Sockets;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace LesBooks.DAL.DAOs
@@ -28,6 +30,36 @@ namespace LesBooks.DAL.DAOs
             this.couponDAO = couponDAO;
             this.clientDAO = clientDAO;
             this.orderHistoryStatusDAO = orderHistoryStatusDAO;
+        }
+        public Dashboard GetDashboard(Dashboard dashboard)
+        {
+            try
+            {
+               
+               foreach (string label in dashboard.labels)
+                {
+                    OpenConnection();
+
+                    string sql = String.Format("select categories.description as description,  ISNULL(COALESCE(Sum(vendas.total), 0),0) as QuantidadeVendida from (select c.id,c.description,bc.book_id book from category c left join book_category bc on c.id = bc.category_id) categories left join (select i.book_id,COALESCE(Sum(i.quantity), 0) total from item i left join orders o on o.id = i.orders_id where o.type_order_id = 2 AND o.dateorder BETWEEN CONVERT(DATETIME,'01/' + '{0}', 103) AND DATEADD(MONTH, 1, CONVERT(DATETIME, '01/' + '{0}', 103)) group by i.book_id) vendas on vendas.book_id = categories.book group by categories.description", label);
+                    cmd.CommandText = sql;
+                    reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                            dashboard.AddDataSet(reader["description"].ToString(), Convert.ToInt32(reader["QuantidadeVendida"]));
+                    }
+                    reader.Close();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                CloseConnection();
+            }
+
+            return dashboard;
         }
         public void UpdatestatusOrder(int idOrder,int idStatusOrder)
         {

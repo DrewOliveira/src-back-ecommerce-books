@@ -151,9 +151,10 @@ namespace LesBooks.DAL.DAOs
 
                 if (client_id != null)
                 {
-                    sql += "where client_id = @client_id";
+                    sql += "where client_id = @client_id ";
                     cmd.Parameters.AddWithValue("@client_id", client_id);
                 }
+                sql += "Order By id desc";
 
                 cmd.CommandText = sql;
                 reader = cmd.ExecuteReader();

@@ -1,6 +1,9 @@
-﻿using LesBooks.Application.Requests;
+﻿using LesBooks.Application;
+using LesBooks.Application.Requests;
 using LesBooks.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Localization;
+using Microsoft.Extensions.Options;
 using System.Net;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -27,6 +30,18 @@ namespace LesBooks.API.Controllers
                 return StatusCode((int)HttpStatusCode.OK, response.adress);
             }
             return StatusCode((int)HttpStatusCode.InternalServerError, response.erros);
+        }
+        [HttpGet("teste")]
+        public double teste()
+        {
+            string _vQuitacao = "12345.50";
+            double valorQuitacao = 0.00;
+
+            _vQuitacao = _vQuitacao.Replace('.',',');
+            Double.TryParse(_vQuitacao, out valorQuitacao);
+
+            return valorQuitacao;
+
         }
         [HttpGet("{id}")]
         public async Task<ActionResult<dynamic>> GetById(int id)

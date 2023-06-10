@@ -76,6 +76,17 @@ namespace LesBooks.API.Controllers
             }
             return StatusCode((int)HttpStatusCode.InternalServerError, response);
         }
+        [HttpPost("dashboard")]
+        public async Task<ActionResult<dynamic>> GetDashboard([FromBody] GetDashboardRequest request)
+        {
+            var response = await this._orderService.GetDashboard(request);
+
+            if (response.dashboard != null)
+            {
+                return StatusCode((int)HttpStatusCode.OK, response.dashboard);
+            }
+            return StatusCode((int)HttpStatusCode.InternalServerError, response);
+        }
         [HttpGet("{id}")]
         public async Task<ActionResult<dynamic>> GetOrderById(int id)
         {

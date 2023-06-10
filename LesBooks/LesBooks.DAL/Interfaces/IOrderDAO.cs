@@ -11,5 +11,6 @@ namespace LesBooks.DAL.Interfaces
     {
         public OrderPurchase GetOrderById(int order_id);
         public Order CreateReplacement(Order order);
+        public Dashboard GetDashboard(Dashboard dashboard);
     }
 }
