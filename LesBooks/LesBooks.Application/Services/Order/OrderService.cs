@@ -68,7 +68,7 @@ namespace LesBooks.Application.Services
                     throw new Exception("Houve um erro no processamento da troca.");
                 }
                 orderReplacement.items = await GetItensReplacement(orderReplacement.items);
-                orderReplacement.totalValue = GetTotalValue(orderReplacement.items, null, 0);
+                orderReplacement.totalValue = GetTotalValue(orderReplacement.items, 0);
                 orderReplacement.client = orderOrigin.client;
                 orderReplacement.dateOrder = DateTime.Now;
                 orderReplacement.type = TypeOrder.REPLACEMENT;
@@ -106,9 +106,8 @@ namespace LesBooks.Application.Services
 
                 #region Valor da compra
                 double deliveyPrice = DeliveryPrice(orderPurchase.adress.zipCode);
-                orderPurchase.totalValue = this.GetTotalValue(orderPurchase.items, orderPurchase.coupons, deliveyPrice);
+                orderPurchase.totalValue = this.GetTotalValue(orderPurchase.items, deliveyPrice);
                 #endregion
-
 
                 #region Validando estoque
                 if (!this.CheckoutQuantityStock(orderPurchase.items))
@@ -127,7 +126,7 @@ namespace LesBooks.Application.Services
                 #region Validando pagamento
                 if(orderPurchase.totalValue > 0)
                 {
-                    if (PaymentValidation(orderPurchase.totalValue, orderPurchase.payments))
+                    if (PaymentValidation(orderPurchase.totalValue, orderPurchase.payments, orderPurchase.coupons))
                         throw new Exception("Ocorreu um erro com o pagamento!");
                 }
                 #endregion
@@ -143,8 +142,9 @@ namespace LesBooks.Application.Services
                 _orderHistoryStatusDAO.CreateStatusHistory((int)orderPurchase.statusOrder,orderPurchase.id, 0);
                 foreach (Item item in orderPurchase.items)
                     _stockRedis.CreateBlock(orderPurchase.id.ToString(), item.book.id.ToString(), item.quantity);
-                _stockRedis.freeTemporaryBlock(orderPurchase.client.id.ToString());
+                    _stockRedis.freeTemporaryBlock(orderPurchase.client.id.ToString());
 
+                orderPurchase.coupons.ForEach(c => _couponDAO.UpdateCoupon(c.id, orderPurchase.id));
             }
             catch (Exception ex)
             {
@@ -153,14 +153,15 @@ namespace LesBooks.Application.Services
 
             return response;
         }
-        public void CreateCoupon(double value, int client_id,TypeCoupon type = TypeCoupon.REPLACEMENT)
+        public void CreateCoupon(double value, int client_id, TypeCoupon type = TypeCoupon.REPLACEMENT)
         {
             try
             {
                 Coupon coupon = new Coupon()
                 {
                     typeCoupon = type,
-                    value = value * -1
+                    value = value * -1,
+                    description = $"TROCA{value * -1}"
 
                 };
                 _couponDAO.CreateCoupon(coupon, client_id);
@@ -170,14 +171,23 @@ namespace LesBooks.Application.Services
 
             }
         }
-        private Boolean PaymentValidation(double value,List<Payment> payments)
+        private Boolean PaymentValidation(double value, List<Payment> payments, List<Coupon> coupons)
         {
             double aux = 0;
             foreach(Payment payment in payments)
             {
                 aux += payment.value;
             }
-            return aux != value;
+
+            if (coupons != null)
+            {
+                foreach (var coupon in coupons)
+                {
+                    aux += coupon.value;
+                }
+            }
+
+            return aux.ToString("F2") != value.ToString("F2");
         }
         private Boolean CheckoutQuantityStock(List<Item> itens)
         {
@@ -218,7 +228,7 @@ namespace LesBooks.Application.Services
             }
         }
 
-        private Double GetTotalValue(List<Item> itens, List<Coupon> coupons,double deliveryPrice)
+        private Double GetTotalValue(List<Item> itens, double deliveryPrice)
         {
             double totalValueMonted = deliveryPrice;
 
@@ -227,13 +237,6 @@ namespace LesBooks.Application.Services
                 totalValueMonted = totalValueMonted + item.totalValue;
             }
 
-            if (coupons != null)
-            {
-                foreach (var coupon in coupons)
-                {
-                    totalValueMonted = totalValueMonted - coupon.value;
-                }
-            }
 
             return totalValueMonted;
         }

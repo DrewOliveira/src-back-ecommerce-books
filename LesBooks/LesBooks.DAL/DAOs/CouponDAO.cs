@@ -161,12 +161,12 @@ namespace LesBooks.DAL.DAOs
             
             try
             {
-                string sql = "UPDATE coupon SET orders_id = @orders_id, active = 0 WHERE id_coupon = @id_coupon";
+                string sql = "UPDATE coupon SET orders_id = @orders_id, active = 0 WHERE id = @id_coupon";
 
                 OpenConnection();
 
                 cmd.Parameters.AddWithValue("@id_coupon", id_coupon);
-                cmd.Parameters.AddWithValue("@order_id", order_id);
+                cmd.Parameters.AddWithValue("@orders_id", order_id);
                 cmd.CommandText = sql;
                 cmd.ExecuteNonQuery();
 
