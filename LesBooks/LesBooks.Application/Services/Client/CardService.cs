@@ -30,7 +30,9 @@ namespace LesBooks.Application.Services
                 card.expiration = request.expiration;
                 card.securityCode = request.securityCode;
                 card.number = request.number;
-                _cardDAO.CreateCard(request.id_client, card);
+
+                card = _cardDAO.CreateCard(request.id_client, card);
+                response.id = card.Id;
             }
             catch (Exception ex)
             {

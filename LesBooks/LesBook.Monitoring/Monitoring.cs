@@ -99,23 +99,29 @@ namespace LesBook.Monitoring
                     cmd.CommandText = sql;
                     reader = cmd.ExecuteReader();
 
-                    while (reader.Read())
+                    if (!reader.HasRows)
                     {
-                        Payment payment = new Payment();
+                        this.patchOrder(order, true);
+                    } else
+                    {
+                        while (reader.Read())
+                        {
+                            Payment payment = new Payment();
 
 
-                        payment.id = (int)reader["id"];
-                        payment.aprroved = Convert.ToBoolean(reader["approved"]);
-                        payment.value = Convert.ToDouble(reader["value"]);
-                        string data = reader["dateApproval"].ToString();
-                        if (!String.IsNullOrEmpty(data))
-                            payment.dateAproval = Convert.ToDateTime(data);
+                            payment.id = (int)reader["id"];
+                            payment.aprroved = Convert.ToBoolean(reader["approved"]);
+                            payment.value = Convert.ToDouble(reader["value"]);
+                            string data = reader["dateApproval"].ToString();
+                            if (!String.IsNullOrEmpty(data))
+                                payment.dateAproval = Convert.ToDateTime(data);
 
 
-                        payments.Add(payment);
-                    }
-                    if (payments.All(payment => payment.dateAproval != DateTime.MinValue))
-                        payments.ForEach(payment => patchOrder(order, payment.aprroved));   
+                            payments.Add(payment);
+                        }
+                        if (payments.All(payment => payment.dateAproval != DateTime.MinValue))
+                            payments.ForEach(payment => patchOrder(order, payment.aprroved));
+                    }    
                 }
                 catch (Exception)
                 {

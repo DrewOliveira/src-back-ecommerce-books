@@ -126,15 +126,22 @@ namespace LesBooks.Application.Services
                 #region Validando pagamento
                 if(orderPurchase.totalValue > 0)
                 {
-                    if (PaymentValidation(orderPurchase.totalValue, orderPurchase.payments, orderPurchase.coupons))
+                    if (!PaymentValidation(orderPurchase.totalValue, orderPurchase.payments, orderPurchase.coupons))
                         throw new Exception("Ocorreu um erro com o pagamento!");
                 }
                 #endregion
+                double totalValueCoupon = 0;
+
+                orderPurchase.coupons.ForEach((c) =>
+                {
+                    totalValueCoupon += c.value;
+                });
 
                 #region Criando novos cupons se necessário
-                if(orderPurchase.totalValue < 0)
+                if (orderPurchase.totalValue < totalValueCoupon)
                 {
-                    CreateCoupon(orderPurchase.totalValue, request.client_id);
+                    double valueFinishTotal = totalValueCoupon - orderPurchase.totalValue;
+                    CreateCoupon(valueFinishTotal, request.client_id);
                 }
                 #endregion
 
@@ -160,8 +167,8 @@ namespace LesBooks.Application.Services
                 Coupon coupon = new Coupon()
                 {
                     typeCoupon = type,
-                    value = value * -1,
-                    description = $"TROCA{value * -1}"
+                    value = value,
+                    description = $"TROCA{value}"
 
                 };
                 _couponDAO.CreateCoupon(coupon, client_id);
@@ -187,7 +194,7 @@ namespace LesBooks.Application.Services
                 }
             }
 
-            return aux.ToString("F2") != value.ToString("F2");
+            return aux <= value;
         }
         private Boolean CheckoutQuantityStock(List<Item> itens)
         {

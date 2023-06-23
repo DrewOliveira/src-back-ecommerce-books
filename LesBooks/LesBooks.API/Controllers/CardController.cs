@@ -49,7 +49,7 @@ namespace LesBooks.API.Controllers
             var response = await this._cardService.CreateCard(request);
             if (response.erros == null)
             {
-                return StatusCode((int)HttpStatusCode.OK);
+                return StatusCode((int)HttpStatusCode.OK, response.id);
             }
             return StatusCode((int)HttpStatusCode.InternalServerError, response.erros);
         }
