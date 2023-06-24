@@ -24,7 +24,7 @@ namespace LesBooks.DAL
             {
                 string sql = "INSERT INTO cards (fk_id_client, fk_id_method, number, name, securityCode, principal, expiration) VALUES (@fk_id_client, @fk_id_method, @number, @name, @securityCode, @principal, @expiration); SELECT SCOPE_IDENTITY();";
                 OpenConnection();
-                cmd.Parameters.AddWithValue("@fk_id_client", id);
+                cmd.Parameters.AddWithValue("@fk_id_client", id == 0 ? (object)DBNull.Value : id);
                 cmd.Parameters.AddWithValue("@fk_id_method", card.flag.Id);
                 cmd.Parameters.AddWithValue("@number", card.number);
                 cmd.Parameters.AddWithValue("@name", card.name);
