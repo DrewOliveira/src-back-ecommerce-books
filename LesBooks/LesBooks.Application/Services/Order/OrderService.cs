@@ -53,7 +53,11 @@ namespace LesBooks.Application.Services
             GetDashboardResponse response = new GetDashboardResponse();
             response.dashboard = new Dashboard();
             response.dashboard.AddLabel(request.init, request.end);
-            response.dashboard = _orderDAO.GetDashboard(response.dashboard);
+            if(request.type == 1)   
+                response.dashboard = _orderDAO.GetDashboardByCategory(response.dashboard);
+            else
+                response.dashboard = _orderDAO.GetDashboardByProduct(response.dashboard);
+
             return response;
 
         }

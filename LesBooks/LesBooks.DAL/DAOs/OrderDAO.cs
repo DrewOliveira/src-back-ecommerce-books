@@ -31,7 +31,7 @@ namespace LesBooks.DAL.DAOs
             this.clientDAO = clientDAO;
             this.orderHistoryStatusDAO = orderHistoryStatusDAO;
         }
-        public Dashboard GetDashboard(Dashboard dashboard)
+        public Dashboard GetDashboardByCategory(Dashboard dashboard)
         {
             try
             {
@@ -61,6 +61,37 @@ namespace LesBooks.DAL.DAOs
 
             return dashboard;
         }
+        public Dashboard GetDashboardByProduct(Dashboard dashboard)
+        {
+            try
+            {
+
+                foreach (string label in dashboard.labels)
+                {
+                    OpenConnection();
+
+                    string sql = String.Format("SELECT books.title AS description, Isnull(COALESCE(Sum(vendas.total), 0), 0) AS QuantidadeVendida FROM (SELECT b.id, b.title FROM book b) books LEFT JOIN (SELECT i.book_id, COALESCE(Sum(i.quantity), 0) total FROM item i LEFT JOIN orders o ON o.id = i.orders_id WHERE o.type_order_id = 2 AND o.dateorder BETWEEN CONVERT(DATETIME, '01/' + '{0}' , 103) AND Dateadd(month, 1, CONVERT(DATETIME, '01/' + '{0}', 103)) GROUP BY i.book_id) vendas ON vendas.book_id = books.id GROUP BY books.title", label);
+                    cmd.CommandText = sql;
+                    reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        dashboard.AddDataSet(reader["description"].ToString(), Convert.ToInt32(reader["QuantidadeVendida"]));
+                    }
+                    reader.Close();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                CloseConnection();
+            }
+
+            return dashboard;
+        }
+
         public void UpdatestatusOrder(int idOrder,int idStatusOrder)
         {
             try

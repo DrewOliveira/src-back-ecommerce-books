@@ -10,5 +10,6 @@ namespace LesBooks.Application.Requests.Order
     {
         public string init { get; set; }
         public string end { get; set; }
+        public int type { get; set; }
     }
 }
