@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\LesBooks.DAL\LesBooks.DAL.csproj" />
+    <ProjectReference Include="..\LesBooks.EmailSender\LesBooks.EmailSender.csproj" />
     <ProjectReference Include="..\LesBooks.Model\LesBooks.Model.csproj" />
   </ItemGroup>
 

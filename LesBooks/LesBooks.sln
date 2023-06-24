@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LesBooks.IoC", "LesBooks.Io
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LesBooks.DAL", "LesBooks.DAL\LesBooks.DAL.csproj", "{AEB5DF65-514D-4FC6-A886-F45EF6EDAF96}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LesBook.Monitoring", "LesBook.Monitoring\LesBook.Monitoring.csproj", "{4C7362E0-23CD-4747-B074-D26DC58774D6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LesBook.Monitoring", "LesBook.Monitoring\LesBook.Monitoring.csproj", "{4C7362E0-23CD-4747-B074-D26DC58774D6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LesBooks.EmailSender", "LesBooks.EmailSender\LesBooks.EmailSender.csproj", "{3127F783-E53E-468C-980E-63AC92571389}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{4C7362E0-23CD-4747-B074-D26DC58774D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4C7362E0-23CD-4747-B074-D26DC58774D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4C7362E0-23CD-4747-B074-D26DC58774D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3127F783-E53E-468C-980E-63AC92571389}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3127F783-E53E-468C-980E-63AC92571389}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3127F783-E53E-468C-980E-63AC92571389}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3127F783-E53E-468C-980E-63AC92571389}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

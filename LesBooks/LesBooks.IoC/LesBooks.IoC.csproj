@@ -15,6 +15,7 @@
     <ProjectReference Include="..\LesBook.Monitoring\LesBook.Monitoring.csproj" />
     <ProjectReference Include="..\LesBooks.Application\LesBooks.Application.csproj" />
     <ProjectReference Include="..\LesBooks.DAL\LesBooks.DAL.csproj" />
+    <ProjectReference Include="..\LesBooks.EmailSender\LesBooks.EmailSender.csproj" />
   </ItemGroup>
 
 </Project>

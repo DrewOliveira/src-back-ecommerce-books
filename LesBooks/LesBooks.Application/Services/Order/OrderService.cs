@@ -6,6 +6,7 @@ using LesBooks.Application.Responses;
 using LesBooks.Application.Services.Interfaces;
 using LesBooks.DAL;
 using LesBooks.DAL.Interfaces;
+using LesBooks.EmailSender;
 using LesBooks.Model.Entities;
 using LesBooks.Model.Enums;
 using Microsoft.VisualBasic;
@@ -30,7 +31,8 @@ namespace LesBooks.Application.Services
         IAdressService _adressService;
         IOrderHistoryStatusDAO _orderHistoryStatusDAO;
         IStockRedis _stockRedis;
-        public OrderService(IBookDAO bookDAO, ICardDAO cardDAO, ICouponDAO couponDAO, IAdressDAO adressDAO, IOrderPurchaseDAO orderPurchaseDAO, IClientDAO clientDAO, IStockDAO stockDAO, IOrderDAO orderDAO, IAdressService adressService,IOrderHistoryStatusDAO orderHistoryStatusDAO,IStockRedis stockRedis)
+        ISender _sender;
+        public OrderService(IBookDAO bookDAO, ICardDAO cardDAO, ICouponDAO couponDAO, IAdressDAO adressDAO, IOrderPurchaseDAO orderPurchaseDAO, IClientDAO clientDAO, IStockDAO stockDAO, IOrderDAO orderDAO, IAdressService adressService,IOrderHistoryStatusDAO orderHistoryStatusDAO, IStockRedis stockRedis, ISender sender)
         {
             _bookDAO = bookDAO;
             _cardDAO = cardDAO;
@@ -43,7 +45,7 @@ namespace LesBooks.Application.Services
             _adressService = adressService;
             _orderHistoryStatusDAO = orderHistoryStatusDAO;
             _stockRedis = stockRedis;
-
+            _sender = sender;
         }
 
         public async Task<GetDashboardResponse> GetDashboard(GetDashboardRequest request)
@@ -144,6 +146,7 @@ namespace LesBooks.Application.Services
                 foreach (Item item in orderPurchase.items)
                     _stockRedis.CreateBlock(orderPurchase.id.ToString(), item.book.id.ToString(), item.quantity);
                 _stockRedis.freeTemporaryBlock(orderPurchase.client.id.ToString());
+                orderPurchase.coupons.ForEach(c => _couponDAO.UpdateCoupon(c.id,orderPurchase.client.id));
 
             }
             catch (Exception ex)
@@ -408,10 +411,15 @@ namespace LesBooks.Application.Services
                         if (request.updateStock)
                             this.UpdateStockQuantity(order.items, false);
                         break;
+                    case StatusOrder.APPROVED_REPLACEMENT:
+                        _sender.SendEmail(order.client.user.email, String.Format("Pedido #{0}", order.id), order.client.name, order.id.ToString());
+                        break;
                     case StatusOrder.APPROVED:
                         _stockRedis.freeBlock(order.id.ToString());
-                        _stockRedis.freeTemporaryBlock(order.client.id.ToString());
                         this.UpdateStockQuantity(order.items, true);
+                        break;
+                    case StatusOrder.FAILED:
+                        _stockRedis.freeBlock(order.id.ToString());
                         break;
 
                 }

@@ -6,6 +6,7 @@ using LesBooks.Application.Services.Interfaces;
 using LesBooks.DAL;
 using LesBooks.DAL.DAOs;
 using LesBooks.DAL.Interfaces;
+using LesBooks.EmailSender;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -17,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace LesBooks.IoC
 {
-    public static class DepedencyInjection
+    public static class DepedencyInjection 
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services,
            IConfiguration configuration)
@@ -57,6 +58,9 @@ namespace LesBooks.IoC
 
             //monitoring 
             services.AddSingleton<IMonitoring, Monitoring>();
+
+            //Email Sender
+            services.AddScoped<ISender, Sender>();
 
             return services;
         }
