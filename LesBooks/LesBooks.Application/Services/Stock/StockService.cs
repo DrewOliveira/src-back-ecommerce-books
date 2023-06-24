@@ -26,8 +26,12 @@ namespace LesBooks.Application.Services
             CreateLockResponse responseBase  =  new CreateLockResponse();
             try
             {
-               responseBase.expireTime = _stockRedis.CreateTemporaryBlock(request.idClient.ToString(),request.idBooks.ToString(), request.quantity, 2);    
-
+                ValidateStockByBookIdResponse stockValidate = new ValidateStockByBookIdResponse();
+                stockValidate = await ValidateStockByBookId(request.idBooks, request.quantity);
+                if (stockValidate.quantity > 0)
+                    responseBase.expireTime = _stockRedis.CreateTemporaryBlock(request.idClient.ToString(), request.idBooks.ToString(), request.quantity, 2);
+                else
+                    throw new Exception("Não há livros disponíveis");
             }catch(Exception ex)
             {
                 responseBase.erros = new  Erro()
