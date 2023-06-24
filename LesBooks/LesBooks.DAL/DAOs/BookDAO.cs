@@ -38,7 +38,7 @@ namespace LesBooks.DAL
 
             try
             {
-                string sql = "SELECT * FROM book where active = 1";
+                string sql = "SELECT * FROM book";
 
                 OpenConnection();
                 cmd.CommandText = sql;
@@ -139,6 +139,43 @@ namespace LesBooks.DAL
 
                 reader.Close();
 
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                CloseConnection();
+            }
+
+            return book;
+        }
+
+        public Book ChangeBook(Book book)
+        {
+            try
+            {
+                string sql = "UPDATE book SET title = @title, publicationYear = @publicationYear, edition = @edition, pageCount = @pageCount, synopsis = @synopsis, active = @active, barcode = @barcode, height = @height, width= @width, weight = @weight, depth = @depth, value = @value, author_id = @author_id, publisher_id = @publisher_id, pricing_id = @pricing_id where id = @book_id;";
+                OpenConnection();
+                cmd.Parameters.AddWithValue("@book_id", book.id);
+                cmd.Parameters.AddWithValue("@title", book.title);
+                cmd.Parameters.AddWithValue("@publicationYear", book.publicationYear);
+                cmd.Parameters.AddWithValue("@edition", book.edition);
+                cmd.Parameters.AddWithValue("@pageCount", book.pageCount);
+                cmd.Parameters.AddWithValue("@synopsis", book.synopsis);
+                cmd.Parameters.AddWithValue("@active", book.active);
+                cmd.Parameters.AddWithValue("@barcode", book.barcode);
+                cmd.Parameters.AddWithValue("@height", book.dimension.height);
+                cmd.Parameters.AddWithValue("@width", book.dimension.width);
+                cmd.Parameters.AddWithValue("@weight", book.dimension.weight);
+                cmd.Parameters.AddWithValue("@depth", book.dimension.depth);
+                cmd.Parameters.AddWithValue("@value", book.value);
+                cmd.Parameters.AddWithValue("@author_id", book.author.id);
+                cmd.Parameters.AddWithValue("@publisher_id", book.publisher.id);
+                cmd.Parameters.AddWithValue("@pricing_id", book.pricing.id);
+                cmd.CommandText = sql;
+                cmd.ExecuteNonQuery();
             }
             catch (Exception)
             {

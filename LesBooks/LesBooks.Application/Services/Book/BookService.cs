@@ -2,6 +2,7 @@
 using LesBooks.Application.Responses;
 using LesBooks.Application.Services.Interfaces;
 using LesBooks.DAL.Interfaces;
+using LesBooks.Model.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -56,6 +57,31 @@ namespace LesBooks.Application.Services
 
             return getAllBookResponse;
 
+        }
+
+        public async Task<ManageBookAtivationResponse> ManageBookAtivation(int id)
+        {
+            ManageBookAtivationResponse manageAtivationResponse = new ManageBookAtivationResponse();
+            
+            try
+            {
+                Book book = new Book();
+                book = _bookDAO.GetBookById(id);
+
+                book.active = book.active ? false : true;
+                
+                manageAtivationResponse.book = _bookDAO.ChangeBook(book);
+            }
+            catch(Exception err)
+            {
+                manageAtivationResponse.erros = new Erro
+                {
+                    descricao = err.Message,
+                    detalhes = err
+                };
+            }
+
+            return manageAtivationResponse;
         }
     }
 }

@@ -20,5 +20,6 @@ namespace LesBooks.Model.Entities
         public List<Card> card { get; set; }
         public List<Adress> adresses { get; set; }
 
+        public Boolean active { get; set; }
     }
 }
