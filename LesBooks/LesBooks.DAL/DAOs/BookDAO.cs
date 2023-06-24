@@ -38,7 +38,7 @@ namespace LesBooks.DAL
 
             try
             {
-                string sql = "SELECT * FROM book where active = 1";
+                string sql = "SELECT * FROM book";
 
                 OpenConnection();
                 cmd.CommandText = sql;
