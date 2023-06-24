@@ -4,6 +4,7 @@ using LesBooks.Application.Responses;
 using LesBooks.Application.Services.Interfaces;
 using LesBooks.Application.Strategies;
 using LesBooks.DAL;
+using LesBooks.DAL.Interfaces;
 using LesBooks.Model.Entities;
 using System;
 using System.Collections.Generic;
@@ -115,6 +116,31 @@ namespace LesBooks.Application.Services
             ListClientsResponse response = new ListClientsResponse();
             response.clients = _clientDAO.GetAllClients();
             return response;
+        }
+
+        public async Task<ManageClientAtivationResponse> ManageClientAtivation(int id)
+        {
+            ManageClientAtivationResponse manageAtivationResponse = new ManageClientAtivationResponse();
+
+            try
+            {
+                Model.Entities.Client client = new Model.Entities.Client();
+
+                client = _clientDAO.GetClientById(id);
+                client.active = client.active ? false : true;
+
+                manageAtivationResponse.client = _clientDAO.UpdateClient(client);
+            }
+            catch (Exception err)
+            {
+                manageAtivationResponse.erros = new Erro
+                {
+                    descricao = err.Message,
+                    detalhes = err
+                };
+            }
+
+            return manageAtivationResponse;
         }
 
         public async Task<UpdateClientResponse> UpdateClient(UpdateClientRequest request)

@@ -11,5 +11,7 @@ namespace LesBooks.Application.Services.Interfaces
     {
         Task<GetAllBookResponse> GetAllBooks();
         Task<GetBookResponse> GetBook(int id);
+
+        Task<ManageBookAtivationResponse> ManageBookAtivation(int id);
     }
 }

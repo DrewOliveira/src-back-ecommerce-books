@@ -12,5 +12,7 @@ namespace LesBooks.DAL.Interfaces
         public List<Book> GetAllBooks();
 
         public Book GetBookById(int id);
+
+        public Book ChangeBook(Book book);
     }
 }

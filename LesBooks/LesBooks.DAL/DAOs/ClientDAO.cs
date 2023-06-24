@@ -26,8 +26,8 @@ namespace LesBooks.DAL
         {
             try
             {
-                string sql = "INSERT INTO clients (fk_id_user, name, gender, cpf, ddd, phone, birth) " +
-                    "VALUES (@userId, @name, @gender, @cpf, @ddd, @phone, @birth); SELECT SCOPE_IDENTITY();";
+                string sql = "INSERT INTO clients (fk_id_user, name, gender, cpf, ddd, phone, birth, active) " +
+                    "VALUES (@userId, @name, @gender, @cpf, @ddd, @phone, @birth, 1); SELECT SCOPE_IDENTITY();";
 
                 OpenConnection();
                 cmd.CommandText = sql;
@@ -88,12 +88,16 @@ namespace LesBooks.DAL
                 client.gender = reader["gender"].ToString();
                 client.cpf = reader["cpf"].ToString();
                 client.birth = Convert.ToDateTime(reader["birth"].ToString());
+                client.active = Convert.ToBoolean(reader["active"]);
                 client.phone = new Phone()
                 {
                     ddd = reader["ddd"].ToString(),
                     phoneNumber = reader["phone"].ToString(),
                     typePhone = Model.Enums.TypePhone.celular
                 };
+                client.user = userDAO.GetUserById(Convert.ToInt32(reader["fk_id_user"]));
+                client.adresses = adressDAO.GetAllAdresss(client.id);
+                client.card = cardDAO.GetAllCards(client.id);
 
                 clients.Add(client);
             }
@@ -119,6 +123,7 @@ namespace LesBooks.DAL
                 client.gender = reader["gender"].ToString();
                 client.cpf = reader["cpf"].ToString();
                 client.birth = Convert.ToDateTime(reader["birth"].ToString());
+                client.active = Convert.ToBoolean(reader["active"]);
                 client.phone = new Phone()
                 {
                     ddd = reader["ddd"].ToString(),
@@ -140,7 +145,7 @@ namespace LesBooks.DAL
             try
             {
                OpenConnection();
-               string sql = "UPDATE clients SET name = @name, gender = @gender, cpf = @cpf, ddd = @ddd, phone = @phone, birth = @birth WHERE id_client = @id";
+               string sql = "UPDATE clients SET name = @name, gender = @gender, cpf = @cpf, ddd = @ddd, phone = @phone, birth = @birth, active = @active WHERE id_client = @id";
 
                 OpenConnection();
                 cmd.CommandText = sql;
@@ -151,6 +156,7 @@ namespace LesBooks.DAL
                 cmd.Parameters.AddWithValue("@ddd", client.phone.ddd);
                 cmd.Parameters.AddWithValue("@phone", client.phone.phoneNumber);
                 cmd.Parameters.AddWithValue("@birth", DateTime.Now);
+                cmd.Parameters.AddWithValue("@active", client.active);
                 cmd.ExecuteNonQuery();
             }
 

@@ -57,5 +57,19 @@ namespace LesBooks.API.Controllers
 
             return StatusCode((int)HttpStatusCode.InternalServerError, response.erros);
         }
+
+        [HttpPost("{id}/status")]
+        public async Task<ActionResult<dynamic>> manageAtivation(int id)
+        {
+            var response = await this._bookService.ManageBookAtivation(id);
+
+            if (response.erros == null)
+            {
+                return StatusCode((int)HttpStatusCode.OK, response.book);
+            }
+
+            return StatusCode((int)HttpStatusCode.InternalServerError, response.erros);
+        }
+
     }
 }
