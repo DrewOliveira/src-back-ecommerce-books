@@ -10,5 +10,6 @@ namespace LesBooks.DAL.Interfaces
     public interface IStockEntryHistoryDAO
     {
         public List<StockEntryHistory> GetStockEntryHistoryByStoockId(int id);
+        public Task<StockEntryHistory> CreateStockEntryHistory(StockEntryHistory stockEntryHistory);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using LesBooks.Application;
+using LesBooks.Application.Requests;
 using LesBooks.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +20,6 @@ namespace LesBooks.API.Controllers
             _bookService = bookService;
             _stockService = stockService;
         }
-
 
         [HttpGet()]
         public async Task<ActionResult<dynamic>> GetAllBooks()
@@ -59,9 +59,9 @@ namespace LesBooks.API.Controllers
         }
 
         [HttpPost("{id}/status")]
-        public async Task<ActionResult<dynamic>> manageAtivation(int id)
+        public async Task<ActionResult<dynamic>> manageAtivation(int id, [FromBody] ManageStatusBookIdRequest request)
         {
-            var response = await this._bookService.ManageBookAtivation(id);
+            var response = await this._bookService.ManageBookAtivation(id, request);
 
             if (response.erros == null)
             {
@@ -71,5 +71,17 @@ namespace LesBooks.API.Controllers
             return StatusCode((int)HttpStatusCode.InternalServerError, response.erros);
         }
 
+        [HttpPost("{bookId}/stock")]
+        public async Task<ActionResult<dynamic>> entryStokBookId(int bookId, [FromBody] EntryStockRequest request)
+        {
+            var response = await this._bookService.entryStokBookId(bookId, request);
+
+            if (response.erros == null)
+            {
+                return StatusCode((int)HttpStatusCode.OK, response.book);
+            }
+
+            return StatusCode((int)HttpStatusCode.InternalServerError, response.erros);
+        }
     }
 }

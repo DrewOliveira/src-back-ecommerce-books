@@ -10,5 +10,7 @@ namespace LesBooks.DAL.Interfaces
     public interface IActivationStatusReasonDAO
     {
         public ActivationStatusReason GetActivationStatusReasonById(int id);
+
+        public Task<ActivationStatusReason> CreateActivationStatusReason(ActivationStatusReason activationStatusReason);
     }
 }

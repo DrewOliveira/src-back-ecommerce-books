@@ -46,5 +46,30 @@ namespace LesBooks.DAL.DAOs
             }
             return activationStatusReason;
         }
+
+        public async Task<ActivationStatusReason> CreateActivationStatusReason(ActivationStatusReason activationStatusReason)
+        {
+            try
+            {
+                string sql = "INSERT INTO activation_status_reason(justification, status, categoryStatusReason_id) VALUES(@justification, @status, @categoryStatusReason_id); SELECT SCOPE_IDENTITY();";
+                OpenConnection();
+                cmd.Parameters.AddWithValue("@justification", activationStatusReason.justification);
+                cmd.Parameters.AddWithValue("@status", activationStatusReason.status);
+                cmd.Parameters.AddWithValue("@categoryStatusReason_id", activationStatusReason.categoryStatusReason.id);
+
+                cmd.CommandText = sql;
+                activationStatusReason.id = Convert.ToInt32(cmd.ExecuteScalar());
+            }
+            catch
+            {
+                throw;
+            }
+            finally
+            {
+                CloseConnection();
+            }
+            return activationStatusReason;
+        }
     }
+
 }

@@ -156,7 +156,7 @@ namespace LesBooks.DAL
         {
             try
             {
-                string sql = "UPDATE book SET title = @title, publicationYear = @publicationYear, edition = @edition, pageCount = @pageCount, synopsis = @synopsis, active = @active, barcode = @barcode, height = @height, width= @width, weight = @weight, depth = @depth, value = @value, author_id = @author_id, publisher_id = @publisher_id, pricing_id = @pricing_id where id = @book_id;";
+                string sql = "UPDATE book SET title = @title, publicationYear = @publicationYear, edition = @edition, pageCount = @pageCount, synopsis = @synopsis, active = @active, barcode = @barcode, height = @height, width= @width, weight = @weight, depth = @depth, value = @value, author_id = @author_id, publisher_id = @publisher_id, pricing_id = @pricing_id, activation_status_reason_id = @activation_status_reason_id where id = @book_id;";
                 OpenConnection();
                 cmd.Parameters.AddWithValue("@book_id", book.id);
                 cmd.Parameters.AddWithValue("@title", book.title);
@@ -174,6 +174,7 @@ namespace LesBooks.DAL
                 cmd.Parameters.AddWithValue("@author_id", book.author.id);
                 cmd.Parameters.AddWithValue("@publisher_id", book.publisher.id);
                 cmd.Parameters.AddWithValue("@pricing_id", book.pricing.id);
+                cmd.Parameters.AddWithValue("@activation_status_reason_id", book.activationStatusReason.id);
                 cmd.CommandText = sql;
                 cmd.ExecuteNonQuery();
             }

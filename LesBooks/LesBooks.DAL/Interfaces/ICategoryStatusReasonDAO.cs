@@ -10,5 +10,10 @@ namespace LesBooks.DAL.Interfaces
     public interface ICategoryStatusReasonDAO
     {
         public CategoryStatusReason GetCategoryStatusReasonById(int id);
+
+        public Task<CategoryStatusReason> GetCategoryStatusReasonByDescription(string description);
+
+        public Task<CategoryStatusReason> CreateCategoryStatusReason(CategoryStatusReason categoryStatusReason);
     }
 }
+

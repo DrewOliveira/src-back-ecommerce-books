@@ -65,5 +65,52 @@ namespace LesBooks.DAL.DAOs
                 CloseConnection();
             }
         }
+
+        public void EntryStockBookId(int book_id, int quantity, Double costValue)
+        {
+            try
+            {
+                OpenConnection();
+                string sql = String.Format("UPDATE stock SET quantity = @newQuantity, costValue = @costValue WHERE book_id = @book_id");
+                cmd.Parameters.AddWithValue("@book_id", book_id);
+                cmd.Parameters.AddWithValue("@newQuantity", quantity);
+                cmd.Parameters.AddWithValue("@costValue", costValue);
+                cmd.CommandText = sql;
+                cmd.ExecuteNonQuery();
+            }
+            catch
+            {
+                throw;
+            }
+            finally
+            {
+                CloseConnection();
+            }
+        }
+
+        public async Task<Stock> CreateStockByBookId(int bookId, Stock stock)
+        {
+            try
+            {
+                string sql = "INSERT INTO stock(quantity, costValue, book_id) VALUES(@quantity, @costValue, @book_id); SELECT SCOPE_IDENTITY();";
+                OpenConnection();
+
+                cmd.Parameters.AddWithValue("@quantity", stock.quantity);
+                cmd.Parameters.AddWithValue("@costValue", stock.costValue);
+                cmd.Parameters.AddWithValue("@book_id", bookId);
+
+                cmd.CommandText = sql;
+                stock.id = Convert.ToInt32(cmd.ExecuteScalar());
+            }
+            catch
+            {
+                throw;
+            }
+            finally
+            {
+                CloseConnection();
+            }
+            return stock;
+        }
     }
 }

@@ -49,5 +49,30 @@ namespace LesBooks.DAL.DAOs
             }
             return stockEntryHistory;
         }
+
+        public async Task<StockEntryHistory> CreateStockEntryHistory(StockEntryHistory stockEntryHistory)
+        {
+            try
+            {
+                string sql = "INSERT INTO stock_entry_history(entry_date, quantity, costValue, stock_id) VALUES(@entry_date, @quantity, @costValue, @stock_id); SELECT SCOPE_IDENTITY();";
+                OpenConnection();
+                cmd.Parameters.AddWithValue("@entry_date", stockEntryHistory.entryDate);
+                cmd.Parameters.AddWithValue("@quantity", stockEntryHistory.quantity);
+                cmd.Parameters.AddWithValue("@costValue", stockEntryHistory.costValue);
+                cmd.Parameters.AddWithValue("@stock_id", stockEntryHistory.stockId);
+
+                cmd.CommandText = sql;
+                stockEntryHistory.id = Convert.ToInt32(cmd.ExecuteScalar());
+            }
+            catch
+            {
+                throw;
+            }
+            finally
+            {
+                CloseConnection();
+            }
+            return stockEntryHistory;
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using LesBooks.Application.Responses;
+﻿using LesBooks.Application.Requests;
+using LesBooks.Application.Responses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,8 @@ namespace LesBooks.Application.Services.Interfaces
         Task<GetAllBookResponse> GetAllBooks();
         Task<GetBookResponse> GetBook(int id);
 
-        Task<ManageBookAtivationResponse> ManageBookAtivation(int id);
+        Task<ManageBookAtivationResponse> ManageBookAtivation(int id, ManageStatusBookIdRequest manageStatusBookIdRequest);
+
+        Task<EntryStockBookByIdResponse> entryStokBookId(int id, EntryStockRequest entryStockRequest);
     }
 }
