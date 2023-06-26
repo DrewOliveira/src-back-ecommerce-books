@@ -68,11 +68,22 @@ namespace LesBooks.Application.Services
             {
                 Order orderOrigin = _orderDAO.GetOrderById(request.order_Id);
                 Order orderReplacement = new Order();
+
+                if (orderOrigin.items.Sum(i => i.quantity) == request.items.Sum(i => i.quantity))
+                {
+                    PatchOrderRequest patch = new PatchOrderRequest();
+                    patch.OrderId = request.order_Id;
+                    patch.statusId = (int)StatusOrder.REPLACEMENT;
+                    patch.updateStock = false;
+                    PatchOrder(patch);
+                }
+
                 orderReplacement.items = request.items.FindAll(orderItem => request.items.Any(item => item.id == orderItem.id));
                 if (!request.items.All(requestItem => orderReplacement.items.Any(replace => replace.id == requestItem.id)))
                 {
                     throw new Exception("Houve um erro no processamento da troca.");
                 }
+
                 orderReplacement.items = await GetItensReplacement(orderReplacement.items);
                 orderReplacement.totalValue = GetTotalValue(orderReplacement.items, 0);
                 orderReplacement.client = orderOrigin.client;
