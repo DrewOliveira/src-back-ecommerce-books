@@ -76,6 +76,7 @@ namespace LesBooks.Application.Services
                     patch.statusId = (int)StatusOrder.REPLACEMENT;
                     patch.updateStock = false;
                     PatchOrder(patch);
+                    return response;
                 }
 
                 orderReplacement.items = request.items.FindAll(orderItem => request.items.Any(item => item.id == orderItem.id));
