@@ -5,6 +5,7 @@ using LesBooks.DAL.DAOs;
 using LesBooks.DAL.Interfaces;
 using LesBooks.Model.Entities;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -158,9 +159,10 @@ namespace LesBooks.Application.Services
                     stockEntryHistory.stockId = stock.id;
 
                     await _stockEntryHistoryDAO.CreateStockEntryHistory(stockEntryHistory);
+                    book.value = calculateValueSale(stock.costValue, book.pricing.maxProfitMargin);
                 }
-                
-                entryStockBookByIdResponse.book = _bookDAO.GetBookById(id);
+
+                entryStockBookByIdResponse.book = _bookDAO.ChangeBook(book);
             }
             catch (Exception err)
             {
@@ -174,10 +176,60 @@ namespace LesBooks.Application.Services
             return entryStockBookByIdResponse;
         }
 
-        //private Double calculateValueSale(Double costValue, int minPrefixCostValue, int maxPrefixCostValue)
-        //{
-        //    Double valueWithMinPrefixCostValue = (costValue / 100) * minPrefixCostValue;
-        //    Double valueWithMaxPrefixCostValue = (costValue / 100) * maxPrefixCostValue;
-        //}
+        private Double calculateValueSale(Double costValue, Double maxPrefixCostValue)
+        {
+            Double valueWithMaxPrefixCostValue = (costValue / 100) * maxPrefixCostValue;
+
+            return costValue + valueWithMaxPrefixCostValue;
+        }
+
+        public async Task<UpdateBookResponse> updateBookById(int id, UpdateBookRequest updateBookRequest)
+        {
+            UpdateBookResponse updateBookResponse = new UpdateBookResponse();
+            try
+            {
+                Book book = new Book();
+
+                book = _bookDAO.GetBookById(id);
+                Double valueSaleMin = calculateValueSale(book.stock.costValue, book.pricing.minProfitMargin);
+                Double valueSaleMax = calculateValueSale(book.stock.costValue, book.pricing.maxProfitMargin);
+
+                if (updateBookRequest.value < valueSaleMin)
+                {
+                    throw new Exception("Value Sale not valide (min)");
+                }
+
+                if (updateBookRequest.value > valueSaleMax)
+                {
+                    throw new Exception("Value Sale not valide (max)");
+                }
+
+                book.ISBN = updateBookRequest.ISBN;
+                book.barcode = updateBookRequest.barcode;
+                book.title = updateBookRequest.title;
+                book.edition = updateBookRequest.edition;
+                book.pageCount = updateBookRequest.pageCount;
+                book.active = updateBookRequest.active;
+                book.synopsis = updateBookRequest.synopsis;
+                book.value = updateBookRequest.value;
+                book.dimension.height = updateBookRequest.dimension.height;
+                book.dimension.width = updateBookRequest.dimension.width;
+                book.dimension.weight = updateBookRequest.dimension.weight;
+                book.dimension.depth = updateBookRequest.dimension.depth;
+                book.publicationYear = updateBookRequest.publicationYear;
+
+                updateBookResponse.book = _bookDAO.ChangeBook(book);
+            }
+            catch (Exception err)
+            {
+                updateBookResponse.erros = new Erro
+                {
+                    descricao = err.Message,
+                    detalhes = err
+                };
+            }
+
+            return updateBookResponse;
+        }
     }
 }

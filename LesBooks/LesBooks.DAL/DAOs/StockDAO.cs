@@ -92,7 +92,7 @@ namespace LesBooks.DAL.DAOs
         {
             try
             {
-                string sql = "INSERT INTO stock(quantity, costValue, book_id) VALUES(@quantity, @costValue, @book_id); SELECT SCOPE_IDENTITY();";
+                string sql = "INSERT INTO stock(quantity, costValue, book_id, supplier_id) VALUES(@quantity, @costValue, @book_id, 1); SELECT SCOPE_IDENTITY();";
                 OpenConnection();
 
                 cmd.Parameters.AddWithValue("@quantity", stock.quantity);

@@ -54,7 +54,7 @@ namespace LesBooks.DAL.DAOs
         {
             try
             {
-                string sql = "INSERT INTO stock_entry_history(entry_date, quantity, costValue, stock_id) VALUES(@entry_date, @quantity, @costValue, @stock_id); SELECT SCOPE_IDENTITY();";
+                string sql = "INSERT INTO stock_entry_history(entry_date, quantity, costValue, stock_id, supplier_id) VALUES(@entry_date, @quantity, @costValue, @stock_id, 1); SELECT SCOPE_IDENTITY();";
                 OpenConnection();
                 cmd.Parameters.AddWithValue("@entry_date", stockEntryHistory.entryDate);
                 cmd.Parameters.AddWithValue("@quantity", stockEntryHistory.quantity);

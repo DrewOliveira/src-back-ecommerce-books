@@ -83,5 +83,18 @@ namespace LesBooks.API.Controllers
 
             return StatusCode((int)HttpStatusCode.InternalServerError, response.erros);
         }
+
+        [HttpPut("{bookId}")]
+        public async Task<ActionResult<dynamic>> entryStokBookId(int bookId, [FromBody] UpdateBookRequest request)
+        {
+            var response = await this._bookService.updateBookById(bookId, request);
+
+            if (response.erros == null)
+            {
+                return StatusCode((int)HttpStatusCode.OK, response.book);
+            }
+
+            return StatusCode((int)HttpStatusCode.InternalServerError, response.erros);
+        }
     }
 }

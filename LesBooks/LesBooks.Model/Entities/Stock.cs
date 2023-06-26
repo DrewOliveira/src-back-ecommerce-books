@@ -16,5 +16,6 @@ namespace LesBooks.Model.Entities
 
         public List<StockEntryHistory> stockEntryHistory { get; set; }
 
+        public Supplier supplier;
     }
 }

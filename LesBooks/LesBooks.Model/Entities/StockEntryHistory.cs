@@ -30,5 +30,7 @@ namespace LesBooks.Model.Entities
         public Double costValue { get; set; }
 
         public int stockId { get; set; }
+
+        public Supplier supplier;
     }
 }

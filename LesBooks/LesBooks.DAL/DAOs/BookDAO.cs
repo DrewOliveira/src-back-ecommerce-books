@@ -156,9 +156,10 @@ namespace LesBooks.DAL
         {
             try
             {
-                string sql = "UPDATE book SET title = @title, publicationYear = @publicationYear, edition = @edition, pageCount = @pageCount, synopsis = @synopsis, active = @active, barcode = @barcode, height = @height, width= @width, weight = @weight, depth = @depth, value = @value, author_id = @author_id, publisher_id = @publisher_id, pricing_id = @pricing_id, activation_status_reason_id = @activation_status_reason_id where id = @book_id;";
+                string sql = "UPDATE book SET isbn = @isbn, title = @title, publicationYear = @publicationYear, edition = @edition, pageCount = @pageCount, synopsis = @synopsis, active = @active, barcode = @barcode, height = @height, width= @width, weight = @weight, depth = @depth, value = @value, author_id = @author_id, publisher_id = @publisher_id, pricing_id = @pricing_id, activation_status_reason_id = @activation_status_reason_id where id = @book_id;";
                 OpenConnection();
                 cmd.Parameters.AddWithValue("@book_id", book.id);
+                cmd.Parameters.AddWithValue("@isbn", book.ISBN);
                 cmd.Parameters.AddWithValue("@title", book.title);
                 cmd.Parameters.AddWithValue("@publicationYear", book.publicationYear);
                 cmd.Parameters.AddWithValue("@edition", book.edition);

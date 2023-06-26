@@ -16,5 +16,7 @@ namespace LesBooks.Application.Services.Interfaces
         Task<ManageBookAtivationResponse> ManageBookAtivation(int id, ManageStatusBookIdRequest manageStatusBookIdRequest);
 
         Task<EntryStockBookByIdResponse> entryStokBookId(int id, EntryStockRequest entryStockRequest);
+
+        Task<UpdateBookResponse> updateBookById(int id, UpdateBookRequest updateBookRequest);
     }
 }
