@@ -21,11 +21,12 @@ namespace LesBooks.Model.Entities
             datasets = new List<Dataset>();
             do
             {
-                labels.Add(string.Format("{0}/{1}", mounthInit.ToString("00"),yearInit.ToString("0000")));
-                if(mounthInit > 12){
+                if (mounthInit > 12)
+                {
                     mounthInit = 1;
                     yearInit++;
                 }
+                labels.Add(string.Format("{0}/{1}", mounthInit.ToString("00"),yearInit.ToString("0000")));
             } while (!(mounthInit++ == mounthEnd && yearInit == yearEnd));
         }
         public class Dataset

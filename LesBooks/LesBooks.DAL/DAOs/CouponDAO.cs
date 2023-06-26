@@ -46,7 +46,7 @@ namespace LesBooks.DAL.DAOs
 
             try
             {
-                string sql = "SELECT coupon.* FROM coupon INNER JOIN client_coupon ON coupon.id = client_coupon.coupon_id WHERE client_coupon.client_id = @client_id";
+                string sql = "SELECT coupon.* FROM coupon INNER JOIN client_coupon ON coupon.id = client_coupon.coupon_id WHERE client_coupon.client_id = @client_id AND coupon.active = 1";
 
                 OpenConnection();
 
